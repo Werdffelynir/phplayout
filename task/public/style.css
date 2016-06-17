@@ -1,0 +1,161 @@
+*{margin: 0; padding: 0;}
+html,body{
+    background-color: #d2d2d2;
+    color: #6f6f6f;
+    font-size: 90%;
+    font-family: sans-serif;
+}
+ul, li, ol{margin: 0; padding: 0;}
+li{list-style: none;}
+a{color: #ec7ce9;}
+a:hover{color: #db73d8;}
+#page{
+    background-color: #eaeaea;
+    width: 80%;
+    margin: 0 auto;
+}
+#header{
+    line-height: 30px;
+    text-align: center;
+    color: #cbb0e3;
+    background-color: #453c4d;
+    font-size: 120%;
+}
+#container{}
+#sidebar, #sidebar_two{
+    border-right: 4px solid #3f3746;
+}
+#sidebar>div, #sidebar_two>div{
+    min-height: 600px;
+    background-color: #453c4d;
+}
+#sidebar li > a, #sidebar_two li > a {
+    width: 100%;
+    display: block;
+    padding: 2px 10px;
+    text-decoration: none;
+    border-bottom: 2px solid #3F3746;
+    color: #cbb0e3;
+    font-size: 11px;
+}
+#sidebar li > a:hover, #sidebar_two li > a:hover {
+    color: #f3f7ab;
+    background-color: #3F3746;
+}
+
+
+#content{}
+
+#footer{
+    line-height: 30px;
+    text-align: center;
+    color: #cbb0e3;
+    background-color: #453c4d;
+}
+
+
+
+
+/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
+#navigation{
+    color: #cbb0e3;
+    background-color: #3f3746;
+}
+#navigation ul{}
+#navigation li{
+    display: inline;
+}
+#navigation li a{
+    color: #cbb0e3;
+}
+#navigation li a:hover{
+    color: #dec0f8;
+    background-color: #241f28;
+}
+#navigation li a{
+    display: inline-block;
+    /*line-height: 30px;*/
+    padding: 5px 10px;
+    text-align: center;
+    text-decoration: none;
+}
+.article{
+    padding: 10px;
+}
+
+
+
+
+
+/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+.btn_inline{
+    display: inline-block;
+    padding: 4px 10px;
+    text-align: center;
+    /*min-width: 120px;*/
+}
+
+
+
+
+/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+#editor{
+
+}
+#editor_menu{
+    color: #dec0f8;
+    background-color: #38303f;
+}
+#editor form{
+
+}
+
+#editor form input{
+    margin: 3px;
+    padding: 3px 4px;
+    border:none;
+    /*border: 2px solid #3F3746;*/
+}
+
+#editor form textarea{
+    width: 100%;
+    padding: 5px;
+    border:none;
+        /*border: 2px solid #3F3746;*/
+}
+
+
+
+/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
+
+
+
+
+/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
+
+
+
+
+/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
+
+
+
+
+/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
+
+
+
+
+/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
+
+
+
+
+/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+

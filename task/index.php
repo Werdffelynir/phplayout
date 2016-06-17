@@ -35,7 +35,7 @@ $Controller = new Main($SRouter, $SLayout, $SPDO);
 
 $SRouter->get('/', [$Controller,'actionIndex']);
 
-$SRouter->get('/c/<category>:a!/<subcategory>:p?', [$Controller,'actionIndex']);
+//$SRouter->get('/c/<category>:a!/<subcategory>:p?', [$Controller,'actionIndex']);
 
 
 
