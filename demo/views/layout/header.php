@@ -1,6 +1,6 @@
 
 <div>
 
-    PHP Layout Class
+    PHP SLayout Class
 
 </div>

@@ -12,20 +12,20 @@
 <div id="page">
 
     <div id="header">
-        <?php Layout::outPosition('header')?>
+        <?php SLayout::outPosition('header')?>
     </div>
 
     <div class="tbl">
         <div id="navigation" class="tbl_cell valign_top width_25">
-            <?php Layout::outPosition('navigation')?>
+            <?php SLayout::outPosition('navigation')?>
         </div>
         <div id="content"  class="tbl_cell valign_top">
-            <?php Layout::outPosition('content')?>
+            <?php SLayout::outPosition('content')?>
         </div>
     </div>
 
     <div id="footer">
-        <?php Layout::outPosition('footer')?>
+        <?php SLayout::outPosition('footer')?>
         <?php echo $this->value('banner2')?>
     </div>
 

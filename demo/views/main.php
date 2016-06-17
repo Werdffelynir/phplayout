@@ -9,4 +9,4 @@ isset($content) OR $content = 'Default Content Text';
 
 </div>
 
-<?php Layout::outPosition('banner')?>
+<?php SLayout::outPosition('banner')?>

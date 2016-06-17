@@ -1,13 +1,13 @@
 <?php
 
-include '../src/Layout.php';
+include '../src/SLayout.php';
 
 $config = [
-    'path' => __DIR__.'/views/',
-    'template' => 'layout/template',
+//    'path' => __DIR__.'/views/',
+//    'template' => 'layout/template',
 ];
 
-$layout = new Layout($config);
+$layout = new SLayout($config);
 
 $layout->setPosition('header','layout/header.php');
 
@@ -67,7 +67,7 @@ $layout->outTemplate();
 $layout->render('navigation','menu', [
     'list' => [],
 ]);
-Layout::value('about_this_page','Lorem ipsum dolor sit amet, consectetur adipisicing elit.');
+SLayout::value('about_this_page','Lorem ipsum dolor sit amet, consectetur adipisicing elit.');
 
 $layout->render('content','main', [
     'title' => 'Architecto iure labore maxime perferendis',

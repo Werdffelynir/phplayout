@@ -1,23 +1,23 @@
 <?php
 
 /**
- * Class Layout.
- * new Layout( [ 'path' => '', 'template' => '' ] )
+ * Class SLayout.
+ * new SLayout( [ 'path' => '', 'template' => '' ] )
  * ->render( $view [, $data [, $callback]] )
  * ::value( $name [, $value] )
  * ->setPosition($position, $view [, $data [, $callback]] )
  * ::outPosition($position [, $returned] )
  * ->outTemplate( [$returned] )
  */
-class Layout 
+class SLayout
 {
     /**
      * Default configuration
      * @var array
      */
     private $defConfig = [
-        'path' => __DIR__,
-        'template' => 'template.php',
+        'path' => 'views',
+        'template' => 'layout/template',
     ];
 
     /**
@@ -33,7 +33,7 @@ class Layout
     static private $positionsData = [];
 
     /**
-     * Layout constructor.
+     * SLayout constructor.
      * @param $config
      */
     public function __construct($config)
@@ -87,11 +87,13 @@ class Layout
      * @param $position
      * @param $view
      * @param array $data
-     * @param $callback
+     * @param null $callback
+     * @return $this
      */
     public function setPosition($position, $view, array $data = [], $callback = null)
     {
         self::$positionsData[$position] = $this->render($view, $data, $callback);
+        return $this;
     }
 
     /**
