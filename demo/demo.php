@@ -1,21 +1,65 @@
 <?php
 
-include 'Layout.php';
+include '../src/Layout.php';
 
 $config = [
     'path' => __DIR__.'/views/',
     'template' => 'layout/template',
 ];
 
-
 $layout = new Layout($config);
-$layout->render('header','layout/header.php');
-$layout->render('navigation','layout/navigation.php');
 
-$layout->render('content','main',[
+$layout->setPosition('header','layout/header.php');
+
+$layout->setPosition('navigation','layout/navigation.php');
+
+$layout->setPosition('banner','banner.php');
+
+$layout->value('banner2', $layout->render('banner'));
+
+$layout->setPosition('content','main',[
     'title' => 'Architecto iure labore maxime perferendis',
     'content' => 'Aliquid dolores excepturi expedita illo itaque minus nulla provident quos vitae voluptate? Architecto iure labore maxime perferendis quidem! Ad aliquam minus necessitatibus?',
-]);
+], function($args) {
+    $args['title'] .= ' It`s Append text to title string';
+    return $args;
+});
+
+$layout->setPosition('footer','layout/footer.php');
+
+$layout->outTemplate();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -32,9 +76,3 @@ $layout->render('content','main', [
 
 $part = $layout->part('sidebar', []);
 */
-
-
-
-
-
-$layout->outputTemplate();
