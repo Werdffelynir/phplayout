@@ -5,7 +5,7 @@
     <title>Document</title>
     <link rel="stylesheet" href="public/grid.css">
     <link rel="stylesheet" href="public/style.css">
-    <script src="public/script.js"></script>
+    <script src="../../../task/public/application.js"></script>
 </head>
 <body>
 

@@ -34,6 +34,7 @@ class Main
         $this->Layout
             ->setPosition('menu','menu')
             ->setPosition('content','content')
+            ->setPosition('editor','content.editor')
             ->outTemplate();
     }
 
