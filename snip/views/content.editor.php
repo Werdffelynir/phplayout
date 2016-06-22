@@ -34,13 +34,13 @@
 
                 <div id="item_types">
                     TYPE:
-                    <span class="checkbox_type active_type" data-type="item"> Item </span>
-                    <span class="checkbox_type" data-type="category"> Category </span>
-                    <span class="checkbox_type" data-type="subcategory"> Sub-Category </span>
+                    <span class="checkbox_type" data-type="1"> Category </span>
+                    <span class="checkbox_type" data-type="2"> SubCategory </span>
+                    <span class="checkbox_type active_type" data-type="3"> Record </span>
 
-                    <input hidden type="radio" name="type" value="item" checked>
-                    <input hidden type="radio" name="type" value="category">
-                    <input hidden type="radio" name="type" value="subcategory">
+                    <input hidden type="radio" name="type" value="1">
+                    <input hidden type="radio" name="type" value="2">
+                    <input hidden type="radio" name="type" value="3">
 
                 </div>
 

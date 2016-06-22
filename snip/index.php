@@ -32,6 +32,9 @@ $Controller = new Main($SRouter, $SLayout, $SPDO);
 
 
 $SRouter->get('/', [$Controller,'actionIndex']);
+$SRouter->post('/api/insert', [$Controller,'actionInsert']);
+$SRouter->post('/api/update', [$Controller,'actionUpdate']);
+$SRouter->post('/api/delete', [$Controller,'actionDelete']);
 
 //$SRouter->get('/c/<category>:a!/<subcategory>:p?', [$Controller,'actionIndex']);
 

@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="public/fontello/css/animation.css">
     <script src="public/applibrary/util.js" type="application/javascript"></script>
     <script src="public/applibrary/dom.js" type="application/javascript"></script>
+    <script src="public/applibrary/aj.js" type="application/javascript"></script>
 
 
 

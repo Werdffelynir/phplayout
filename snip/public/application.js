@@ -19,7 +19,8 @@ var App = App || {};
             if(Util.isObj(formSize)) {
                 App.node['loader_content'].style.display = 'block';
                 App.node['loader_content'].style.width = formSize.width + 'px';
-            }
+            } else
+                throw new Error("not find form")
         } else {
             App.node['loader_content'].style.display = 'none';
         }
@@ -79,6 +80,14 @@ var App = App || {};
         App.node['form'] = Dom('form[name=record]').one();
         App.node['loader_content'] = Dom('.loader_content').one();
 
+        //Dom('input[name=type][value=3]').one().checked = true;
+        Dom('.checkbox_type').each(function(elem){
+            if(elem.classList.contains('active_type')){
+                var selector = 'input[name=type][type=radio][value='+(elem.getAttribute('data-type'))+']';
+                console.log(Dom(selector).all());
+                //Dom().one().checked = true;
+            }
+        });
 
         Dom('.icon_btn').each(function(item, index){
             item.onclick = function(event){
@@ -87,13 +96,15 @@ var App = App || {};
         });
 
         Dom('.checkbox_type').on('click', function(event){
+
             Dom('.checkbox_type').each(function(elem){
                 elem.classList.remove('active_type');
             });
+
             var target = event.target;
             var type = target.getAttribute('data-type');
             target.classList.add('active_type');
-            Dom('input[name=type][value='+type+']').one().checked = true;
+            //Dom('input[name=type][value='+type+']').one().checked = true;
         });
 
         Dom('.action-new-record').on('click', function(event){
@@ -122,8 +133,6 @@ var App = App || {};
                 }
                 else if(Util.isEmpty(formData.link)) {
                     Dom('input[name=link]').one().value = formData.link = App.encodeLink(formData.title);
-                    console.log(Dom('input[name=link]').one());
-                    console.log(App.encodeLink(formData.title));
                 }
                 else if(Util.isEmpty(formData.type)) {
                     error = 'Field "type" can`t be empty'
@@ -138,6 +147,18 @@ var App = App || {};
                         content: error
                     });
                 }else{
+
+                    /*Aj.post('/api/insert', formData, function(status, response){
+                        var data = null;
+                        try{
+                            data = JSON.parse(response);
+                            console.log(data);
+                        } catch (error) {}
+
+                        console.log(status, response);
+                    });*/
+
+                    console.log(formData);
 
                 }
             }
