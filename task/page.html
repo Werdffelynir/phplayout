@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <style>
+        body{
+            background-color: #111;
+        }
+        .block{
+            width: 150px;
+            height: 150px;
+            position: absolute;
+            background-color: #d00;
+            left: 100px;
+            top: 100px;
+            border-radius: 50%;
+            animation-name: example;
+            animation-duration: 4s;
+        }
+        @keyframes example {
+            0%   {background-color: red; left:0px; top:0px;}
+            25%  {background-color: yellow; left:200px; top:0px;}
+            50%  {background-color: blue; left:200px; top:200px;}
+            75%  {background-color: green; left:0px; top:200px;}
+            100% {background-color: red; left:0px; top:0px;}
+        }
+    </style>
+</head>
+<body>
+   
+   <div id="block" class="block">
+       block 1
+   </div>
+   
+    
+</body>
+</html>

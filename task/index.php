@@ -9,9 +9,7 @@ require_once('controllers/Main.php');
 /**
  * Uri Routing
  */
-$SRouter = new SRouter([
-    'base_path'=> 'layout/task'
-]);
+$SRouter = new SRouter();
 $SRouter->forceRun(true);
 
 
