@@ -5,11 +5,31 @@
     <title>Document Task</title>
     <link rel="stylesheet" href="public/grid.css">
     <link rel="stylesheet" href="public/style.css">
-    <script src="public/script.js" type="application/javascript"></script>
+    <link rel="stylesheet" href="public/fontello/css/fontello.css">
+    <link rel="stylesheet" href="public/fontello/css/animation.css">
+    <script src="public/applibrary/util.js" type="application/javascript"></script>
+    <script src="public/applibrary/dom.js" type="application/javascript"></script>
+
+
+
+    <script src="public/application.js" type="application/javascript"></script>
 </head>
 <body>
 
 <div id="page">
+    <div id="info_panel">
+        <div class="tbl">
+            <div id="info_panel_title" class="tbl_cell">System Message</div>
+            <div id="info_panel_close" class="tbl_cell width_5 text_right"><i class=" icon-cancel"></i></div>
+        </div>
+        <div id="info_panel_content">
+
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias amet architecto asperioresbus.</p>
+
+        </div>
+    </div>
+
+
     <div id="navigation">
         <ul>
             <li><a href="#link1">PHP</a></li>
@@ -63,21 +83,7 @@
             </div>
         </div>
         <div id="content" class="tbl_cell valign_top">
-            <div id="editor">
-                <div id="editor_menu">
-                    <div class="btn_inline">New</div>
-                    <div class="btn_inline">Save</div>
-                    <div class="btn_inline">Remove</div>
-                </div>
-
-                <form action="">
-                    <input name="" type="text" value=""><input name="" type="text" value=""><input name="" type="text" value="">
-                    <div>
-                        <textarea name=""></textarea>
-                    </div>
-                </form>
-
-            </div>
+            <?php SLayout::outPosition('editor')?>
         </div>
     </div>
     <div id="footer">footer</div>

@@ -23,7 +23,8 @@ a:hover{color: #db73d8;}
 }
 #container{}
 #sidebar, #sidebar_two{
-    border-right: 4px solid #3f3746;
+    border-left: 2px solid #3f3746;
+    border-right: 2px solid #3f3746;
 }
 #sidebar>div, #sidebar_two>div{
     min-height: 600px;
@@ -39,10 +40,12 @@ a:hover{color: #db73d8;}
     font-size: 11px;
 }
 #sidebar li > a:hover, #sidebar_two li > a:hover {
-    color: #f3f7ab;
-    background-color: #3F3746;
+    color: #dec0f8;
+    background-color: #241f28;
 }
-
+#sidebar li:first-child > a {
+    border-top: 2px solid #3F3746;
+}
 
 #content{}
 
@@ -89,19 +92,46 @@ a:hover{color: #db73d8;}
 
 
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
-.btn_inline{
+
+.btn_inline {
     display: inline-block;
     padding: 4px 10px;
     text-align: center;
-    /*min-width: 120px;*/
+    text-decoration: none;
+    line-height: 18px;
+    border-radius: 10px;
+    background-color: #ddd;
+    color: #444444;
+    margin: 2px 2px;
+    cursor: pointer;
+}
+.btn_inline:hover {
+    display: inline-block;
+    background-color: #d1d1d1;
+    color: #202020;
+}
+
+.btn_inline_dark{
+    display: inline-block;
+}
+.btn_inline_dark>a{
+    display: block;
+    padding: 4px 10px;
+    text-align: center;
+    text-decoration: none;
+}
+.btn_inline_dark a:hover{
+    display: inline-block;
+    color: #dec0f8;
+    background-color: #241f28;
 }
 
 
 
-
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
-#editor{
-
+#editor, #editor input, #editor text{
+    font-size: 12px;
+    font-family: sans-serif;
 }
 #editor_menu{
     color: #dec0f8;
@@ -112,42 +142,123 @@ a:hover{color: #db73d8;}
 }
 
 #editor form input{
-    margin: 3px;
     padding: 3px 4px;
     border:none;
-    /*border: 2px solid #3F3746;*/
+    margin: 0 0 2px;
+    width: 80%;
 }
 
-#editor form textarea{
-    width: 100%;
-    padding: 5px;
+#editor form input[name=title]{
     border:none;
-        /*border: 2px solid #3F3746;*/
+    width: 100%;
+    margin: 2px 0 2px;
+}
+#editor form textarea[name=content]{
+    width: 100%;
+    min-height: 300px;
+    padding: 3px;
+    border: none;
+}
+#editor form textarea[name=description]{
+    border:none;
+    padding: 3px;
+    width: 80%;
+    height: 50px;
 }
 
 
 
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+span.relation{
+    display: block;
+    padding: 2px 2px;
+    border-radius: 10px;
+    background-color: #ddd;
+    margin: 2px 0;
+    box-shadow: 0 0 2px -1px #00000080;
+    width: 99%;
+}
 
-
-
+span.icon_btn{
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    border-radius: 10px;
+    background-color: #727272;
+    color: #e7e7e7;
+    font-weight: bold;
+    line-height: 18px;
+    box-shadow: 0 0 5px -3px #00000080;
+    cursor: pointer;
+}
+span.icon_btn>i{
+    font-size: 15px;
+    margin-left: -2px;
+}
+span.icon_btn>i.icon-plus{
+    line-height: 19px;
+}
+span.icon_btn:hover{
+    background-color: #444444;
+    color: #fdfdfd;
+}
+/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+.loader_content {
+    display: none;
+    position: absolute;
+    background: rgba(234, 234, 234, 0.7);
+    width: 100%;
+    height: 100%;
+}
+.loader_content span {
+    display: inline-block;
+    margin-top: 35%;
+    margin-left: 45%;
+    color: #2b2b2b;
+}
 
 
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
-
+#item_types {
+    margin: 5px 0;
+}
+#item_types > span {
+    background-color: #ddd;
+    color: #444444;
+    padding: 3px 5px;
+    display: inline-block;
+    border-radius: 15px;
+    cursor: pointer;
+}
+#item_types > span:hover, #item_types > span.active_type {
+    background-color: #444444;
+    color: #fdfdfd;
+}
 
 
 
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
-
-
-
-
-
-/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
-
-
+#info_panel{
+    display: none;
+    position: absolute;
+    width: 80%;
+    background-color: #deb936;
+    color: #2b2b2b;
+    box-shadow: 0 40px 30px -20px #2b2b2b;
+}
+#info_panel_title{
+    font-size: 110%;
+    padding: 4px 0 2px 10px;
+    color: #9e7d1f;
+}
+#info_panel_close{
+    cursor: pointer;
+}
+#info_panel_content{
+    border-top: 1px solid #bf9a1d;
+    padding: 10px;
+}
 
 
 
