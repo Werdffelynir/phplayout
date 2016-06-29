@@ -46,16 +46,16 @@ class Main
             'result' => null,
         ];
         try{
-            //"link":"PHP","tags":"","keyword":"","description":"","type":"subcategory","title":"PHP","content":"PHP Code Snippets"}
-            $data['type'] = trim($_POST['type']);
+            $data['deep'] = trim($_POST['deep']);
+            $data['link'] = trim($_POST['link']);
             $data['title'] = trim($_POST['title']);
             $data['content'] = trim($_POST['content']);
-            $data['link'] = trim($_POST['link']);
-            $data['tags'] = trim($_POST['tags']);
-            $data['description'] = trim($_POST['description']);
             $data['created'] = time();
+            $data['keyword'] = trim($_POST['keyword']);
+            $data['description'] = trim($_POST['description']);
+            $data['tags'] = trim($_POST['tags']);
 
-            $result = $this->db->insert('article', $data);
+            $result = $this->db->insert('item', $data);
 
             if($error = $this->db->getError()){
                 $response['error'] = $error['error'];
@@ -64,13 +64,41 @@ class Main
                 $response['result'] = $result;
 
         }catch(Exception $e) {
-            $response['error'] = 'Error on try parse POST data ';
+            $response['error'] = '"InsertItem" Error - try parse POST data ';
         }
-
 
         print_r(json_encode($response));
         exit;
     }
+
+    public function actionInsertRelation()
+    {
+        $response = [
+            'data' => null,
+            'error' => null,
+            'result' => null,
+        ];
+        try{
+            $data['parent'] = (int)trim($_POST['parent']);
+            $data['child'] = (int)trim($_POST['child']);
+
+            $result = $this->db->insert('relation', $data);
+
+            if($error = $this->db->getError()){
+                $response['error'] = $error['error'];
+                $response['error_sql'] = $error['sql'];
+            }else
+                $response['result'] = $result;
+
+        }catch(Exception $e) {
+            $response['error'] = '"InsertRelation" Error - try parse POST data ';
+        }
+
+        print_r(json_encode($response));
+        exit;
+    }
+
+
 
     public function actionUpdate()
     {
@@ -96,4 +124,48 @@ class Main
 
     }
 
+    public function actionAllSubcategories($parent)
+    {
+        $response = [
+            'result' => null,
+            'error' => null,
+        ];
+
+        $result = $this->actionGetAllByDeep((int) $parent);
+
+        if($result)
+            $response['result'] = $result;
+        else if($error = $this->db->getError()) {
+            $response['error'] = $error['error'];
+            $response['error_sql'] = $error['sql'];
+        }
+
+        print_r(json_encode($response));
+        exit;
+    }
+
+    public function actionAllCategories()
+    {
+        $response = [
+            'result' => null,
+            'error' => null,
+        ];
+
+        $result = $this->actionGetAllByDeep(1);
+
+        if($result)
+            $response['result'] = $result;
+        else if($error = $this->db->getError()) {
+            $response['error'] = $error['error'];
+            $response['error_sql'] = $error['sql'];
+        }
+
+        print_r(json_encode($response));
+        exit;
+    }
+
+    public function actionGetAllByDeep($deep)
+    {
+        return $this->db->select('*', 'item', 'deep = ?', [(int)$deep]);
+    }
 }

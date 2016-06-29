@@ -9,7 +9,8 @@ require_once('controllers/Main.php');
 /**
  * Uri Routing
  */
-$SRouter = new SRouter();
+
+$SRouter = new SRouter(['base_path'=>'/layout/snip/']);
 $SRouter->forceRun(true);
 
 
@@ -35,6 +36,8 @@ $SRouter->get('/', [$Controller,'actionIndex']);
 $SRouter->post('/api/insert', [$Controller,'actionInsert']);
 $SRouter->post('/api/update', [$Controller,'actionUpdate']);
 $SRouter->post('/api/delete', [$Controller,'actionDelete']);
+$SRouter->post('/api/all_category', [$Controller,'actionAllCategories']);
+$SRouter->post('/api/all_subcategory/:n!', [$Controller,'actionAllSubcategories']);
 
 //$SRouter->get('/c/<category>:a!/<subcategory>:p?', [$Controller,'actionIndex']);
 

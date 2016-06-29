@@ -129,7 +129,7 @@ a:hover{color: #db73d8;}
 
 
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
-#editor, #editor input, #editor text{
+#editor, #editor input, #editor textarea{
     font-size: 12px;
     font-family: sans-serif;
 }
@@ -145,7 +145,7 @@ a:hover{color: #db73d8;}
     padding: 3px 4px;
     border:none;
     margin: 0 0 2px;
-    width: 80%;
+    width: 98%;
 }
 
 #editor form input[name=title]{
@@ -162,7 +162,7 @@ a:hover{color: #db73d8;}
 #editor form textarea[name=description]{
     border:none;
     padding: 3px;
-    width: 80%;
+    width: 98%;
     height: 50px;
 }
 
@@ -193,7 +193,7 @@ span.icon_btn{
 }
 span.icon_btn>i{
     font-size: 15px;
-    margin-left: -2px;
+    margin-left: -1px;
 }
 span.icon_btn>i.icon-plus{
     line-height: 19px;
@@ -220,10 +220,10 @@ span.icon_btn:hover{
 
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
-#item_types {
+#deeps {
     margin: 5px 0;
 }
-#item_types > span {
+#deeps > span {
     background-color: #ddd;
     color: #444444;
     padding: 3px 5px;
@@ -231,7 +231,7 @@ span.icon_btn:hover{
     border-radius: 15px;
     cursor: pointer;
 }
-#item_types > span:hover, #item_types > span.active_type {
+#deeps > span:hover, #deeps > span.active {
     background-color: #444444;
     color: #fdfdfd;
 }
@@ -259,6 +259,56 @@ span.icon_btn:hover{
     border-top: 1px solid #bf9a1d;
     padding: 10px;
 }
+
+
+
+/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+#rel_choice{
+    /*background-color: #DDD;*/
+}
+ul.categories_list, ul.subcategories_list{
+
+}
+ul.categories_list li, ul.subcategories_list li{
+    display: block;
+    color: #7f7f7f;
+    cursor: pointer;
+}
+ul.categories_list li:hover, ul.subcategories_list li:hover{
+    background-color: #ddd;
+    color: #7f7f7f;
+}
+
+
+
+
+/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
+
+
+
+
+/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
+
+
+
+
+/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
+
+
+
+
+/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
+
+
+
+
+/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
+
 
 
 

@@ -3,19 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <title>Document Task</title>
+
     <link rel="stylesheet" href="public/grid.css">
     <link rel="stylesheet" href="public/style.css">
+
     <link rel="stylesheet" href="public/fontello/css/fontello.css">
     <link rel="stylesheet" href="public/fontello/css/animation.css">
-    <script src="public/applibrary/util.js" type="application/javascript"></script>
-    <script src="public/applibrary/dom.js" type="application/javascript"></script>
-    <script src="public/applibrary/aj.js" type="application/javascript"></script>
 
+    <script src="public/js.libs/ns.application.js" type="application/javascript"></script>
+    <script src="public/js.app/init.js" type="application/javascript"></script>
 
+    <style>
+        .piece-box {
+            position: absolute;
+            background-color: #ffffff;
+            box-shadow: 0 0 10px -3px #000;
+        }
+        .piece-title {
+            display: inline-block;
+        }
+        .piece-content {
 
-    <script src="public/application.js" type="application/javascript"></script>
+        }
+        .piece-close {
+            display: inline-block;
+            position: absolute;
+            right: 5px;
+        }
+    </style>
 </head>
 <body>
+
 
 <div id="page">
     <div id="info_panel">
@@ -25,7 +43,7 @@
         </div>
         <div id="info_panel_content">
 
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias amet architecto asperioresbus.</p>
+            <p>Lorem-ipsum dolor sit --amet, consectetur adipisicing elit. Alias amet architecto asperioresbus.</p>
 
         </div>
     </div>
@@ -85,6 +103,7 @@
         </div>
         <div id="content" class="tbl_cell valign_top">
             <?php SLayout::outPosition('editor')?>
+
         </div>
     </div>
     <div id="footer">footer</div>

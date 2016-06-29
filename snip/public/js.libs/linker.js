@@ -7,10 +7,10 @@
  * linker.get( id )     Выбирает элемент по индификатору
  * linker.click( id )   Назначает событие клика для элемента по индификатору
  */
-if(App.namespace) { App.namespace('Extension.Linker', function(App) {
+(function(){
 
     /**
-     * @namespace App.Extension.Linker
+     * @namespace window.Linker
      */
     var linker = {
         stack: [],
@@ -20,7 +20,7 @@ if(App.namespace) { App.namespace('Extension.Linker', function(App) {
     /**
      * Search link elements
      * Priority for search elements: data-id, id, href
-     * @namespace App.Extension.Linker.search
+     * @namespace window.Linker.search
      * @param where
      * @returns {*}
      */
@@ -54,7 +54,7 @@ if(App.namespace) { App.namespace('Extension.Linker', function(App) {
 
     /**
      *
-     * @namespace App.Extension.Linker.refresh
+     * @namespace window.Linker.refresh
      * @returns {*}
      */
     linker.refresh = function() {
@@ -63,7 +63,7 @@ if(App.namespace) { App.namespace('Extension.Linker', function(App) {
 
     /**
      *
-     * @namespace App.Extension.Linker.get
+     * @namespace window.Linker.get
      * @param id
      * @param array
      * @returns {*}
@@ -81,7 +81,7 @@ if(App.namespace) { App.namespace('Extension.Linker', function(App) {
 
     /**
      *
-     * @namespace App.Extension.Linker.click
+     * @namespace window.Linker.click
      * @param id
      * @param callback
      * @param useCapture
@@ -94,7 +94,7 @@ if(App.namespace) { App.namespace('Extension.Linker', function(App) {
 
     /**
      *
-     * @namespace App.Extension.Linker.on
+     * @namespace window.Linker.on
      * @param event
      * @param id
      * @param callback
@@ -115,6 +115,6 @@ if(App.namespace) { App.namespace('Extension.Linker', function(App) {
     };
 
 
-    return linker
+    window.Linker = linker;
 
-})}
+})();
