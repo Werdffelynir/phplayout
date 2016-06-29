@@ -50,11 +50,6 @@ var App = App || {};
 
         }
 
-
-
-
-
-
         if(typeof values === 'object') {
             App.infoPanelElement.style.display = 'block';
             Dom('#info_panel_title').html(values.title || 'System Message');
