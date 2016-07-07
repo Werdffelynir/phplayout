@@ -1,212 +1,84 @@
-/**
- *
- */
-(function (window){
-
-    var
-        /**
-         * NamespaceApplication Prototype
-         * @type {*}
-         */
-        proto = {
-
-            config: {
-                /**
-                 * Base url
-                 */
-                url: '/',
-
-                /**
-                 * Debug mod
-                 */
-                debug: true,
-
-                /**
-                 * Startup type of constructor for modules
-                 * Type: false - off constructor
-                 *      'runtime' - perform during the assignment of namespace
-                 *      'gather' - save in the stack,
-                 *          for call and execute all constructor methods, use .constructsStart()
-                 */
-                constructsType: 'runtime',
-                _lastKey: null,
-                _stackRequires: {},
-                _stackNodes: {},
-                _stackConstructs: []
-            },
-
-            merge: function (objectBase, src) {
-                for (var key in src)
-                    if (objectBase[key] === undefined)
-                        objectBase[key] = src[key];
-                return objectBase;
-            }
-        },
-
-        /**
-         * NamespaceApplication Constructor
-         * @param config
-         * @returns {app|NamespaceApplication}
-         */
-        app = function(config){
-
-            if (!(this instanceof NamespaceApplication))
-                return new NamespaceApplication(config);
-
-            this.version = '0.1.0';
-            this.setConfig(config);
-        };
+(function () {
 
 
-    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-     * PROTOTYPE METHODS
-     */
+    var version = '0.1.0';
+
 
     /**
-     * Apply config object to instance properties
-     * @param config
-     * @returns {proto}
+     * Constructor
+     * @param properties
+     * @returns {app|NamespaceApplication}
      */
-    proto.setConfig = function(config) {
-        config = typeof config === 'object' ? this.merge(config, this.config) : this.config;
-        for(var prop in config){
-            if(this[prop] === undefined)
-                this[prop] = config[prop];
-        }
-        return this;
+    var app = function (properties) {
+        if (!(this instanceof NamespaceApplication))
+            return new NamespaceApplication(properties);
+
+        this.setProperties(properties);
+
+        this.domLoaded = app.domLoaded;
+        this.request = app.request;
+        this.script = app.script;
+        this.style = app.style;
+        this.file = app.file;
+        this.extend = app.extend;
+        this.store = app.store;
+        this.route = app.route;
+        this.routePath = app.routePath;
+        this.assign = app.assign;
+        this.inject = app.inject;
+        this.query = app.query;
+        this.queryAll = app.queryAll;
+        this.each = app.each;
+
     };
 
-    /**
-     * Create namespace for module-script
-     * @param namespace  "Controller.Name" or "Action.Name"
+    /** Execute callback function if or when DOM is loaded
      * @param callback
-     * @param args
-     * @returns {{}}
      */
-    proto.namespace = function(namespace, callback, args) {
-
-        var
-            name,
-            path = namespace.split('.'),
-            tmp = this || {},
-            len = path.length;
-
-        for (var i = 0; i < len; i ++ ){
-            name = path[i].trim();
-            if (typeof tmp[name] !== 'object'){
-                tmp[name] = (i+1 >= len) ? (callback?callback.call(tmp,this,{}):{}) :{};
-                tmp = tmp[name];
-            }else{
-                tmp = tmp[name];
-            }
+    app.domLoaded = function (callback) {
+        if (document.querySelector('body')) {
+            callback.call({});
+        } else {
+            document.addEventListener('DOMContentLoaded', function () {
+                callback.call({})
+            }, false);
         }
-
-        if(typeof tmp === "object" && tmp.construct) {
-            args = Array.isArray(args) ? args : [];
-            if(this.constructsType == 'runtime') {
-                tmp.construct.apply(tmp, args);
-            }else if (this.constructsType == 'gather') {
-                this._stackConstructs.push(tmp);
-            }
-        }
-
-        return  tmp;
     };
-
-    /**
-     * Run all modules constructs
-     * @param args
-     * @returns {proto}
-     */
-    proto.constructsStart = function(args) {
-        this.each(this._stackConstructs, function(item, index){
-            item.construct.apply(item, args);
-        },args);
-        this._stackConstructs = [];
-        return this;
-    };
-
-    /**
-     * Storage of HTML elements
-     *      if nodes a Object - Add new elements key = HTMLElements
-     *      if nodes a String - Get HTMLElements by key, if exists
-     *      if nodes a not set - return object with all elements
-     * @param nodes
-     * @returns {*}
-     */
-    proto.node = function (nodes) {
-        if(typeof nodes === 'object') {
-            for (var key in nodes)
-                this._stackNodes[key] = nodes[key];
-            return this._stackNodes;
-        }
-        else if (typeof nodes === 'string')
-            return this._stackNodes[nodes] ? this._stackNodes[nodes] : null;
-
-        else if (nodes === undefined)
-            return this._stackNodes;
-    };
-
 
 
     /**
-     * Designate a list of scripts for loading
-     * @param key           list key (identifier)
-     * @param path          array with scripts url
-     * @param oncomplete    executing when all scripts are loaded
-     * @param onerror
-     * @returns {proto}
+     * Base url request
+     * @param method
+     * @param url
+     * @param callback
+     * @param callbackError
+     * @returns {XMLHttpRequest}
      */
-    proto.require = function(key, path, oncomplete, onerror){
-        this._lastKey = key;
-        this._stackRequires[key] = {
-            src:  Array.isArray(path) ? path : [path],
-            oncomplete : oncomplete,
-            onerror : onerror
-        };
-        return this;
-    };
-    /**
-     * Start loading the list of scripts by key (identifier)
-     * @param key
-     */
-    proto.requireStart = function(key){
-        var source;
-        key = key || this._lastKey;
-        if(this._stackRequires[key]){
-            this._recursive_load_script(0, key);
-        }else{
-            console.error("Require source not found! Key: " + key + " not exist!");
-        }
-        return this;
+    app.request = function (method, url, callback, callbackError) {
+        var xhr = new XMLHttpRequest();
+        method = method || 'POST';
+        url = url || '/';
+
+        xhr.open(method, url, true);
+        xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        if (typeof callback === 'function') xhr.onloadend = callback;
+        if (typeof callbackError === 'function') xhr.onerror = callbackError;
+        xhr.send();
+        return xhr;
     };
 
-    proto._recursive_load_script = function  (i, key) {
-        var self = this,
-            source = this._stackRequires[key];
-
-        if (source.src[i]) {
-            if(!Array.isArray(source.node)) source.node = [];
-
-            source.node.push(this.script(source.src[i], function(){
-                self._recursive_load_script(++i, key);
-            }, source.onerror));
-
-        } else if (i ===  source.src.length)
-            source.oncomplete.call(self, source.node);
-        else
-            self._recursive_load_script(++i, key);
-    };
 
     /**
      * Loads the script element
      * @param src
      * @param onload
      * @param onerror
-     * @returns {Element}
+     * @returns {*}
      */
-    proto.script = function  (src, onload, onerror) {
-        if(!src) return null;
+    app.script = function (src, onload, onerror) {
+
+        if (!src) return null;
 
         var script = document.createElement('script'),
             id = "src-" + Math.random().toString(32).slice(2);
@@ -222,14 +94,17 @@
         return script;
     };
 
+
     /**
+     *
      * Loads the CSS link element
-     * @param src
+     *
+     * @param url
      * @param onload
      * @param onerror
      * @returns {Element}
      */
-    proto.style = function  (src, onload, onerror) {
+    app.style = function (url, onload, onerror) {
         var link = document.createElement('link'),
             id = "src-" + Math.random().toString(32).slice(2);
 
@@ -242,15 +117,16 @@
         return link;
     };
 
+
     /**
      * Loads the file
      * @param url
      * @param onload
      * @param onerror
      */
-    proto.file = function  (url, onload, onerror) {
-        proto.request('GET', url, function(event){
-            if(event.target.status === 200)
+    app.file = function (url, onload, onerror) {
+        app.request('GET', url, function (event) {
+            if (event.target.status === 200)
                 onload.call(this, event.target.responseText, event);
             else
                 onerror.call(this, event);
@@ -258,57 +134,109 @@
     };
 
     /**
-     * Base url request
-     * @param method
-     * @param url
+     * Merge objects
+     * @param obj objectBase
+     * @param src
      * @param callback
-     * @param callbackError
-     * @returns {XMLHttpRequest}
+     * @returns {*}
      */
-    proto.request = function(method, url, callback, callbackError) {
-        var xhr = new XMLHttpRequest();
-        method = method || 'POST';
-        url = url || '/';
+    app.extend = function (obj, src, callback) {
+        for (var key in src) {
+            var free, entry = src[key];
+            if (typeof callback === 'function')
+                free = callback(key, obj[key], src[key]);
+            if (src.hasOwnProperty(key) && !!free) obj[key] = entry;
+        }
+        return obj;
+    };
 
-        xhr.open(method, url, true);
-        xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-        if(typeof callback === 'function') xhr.onloadend = callback;
-        if(typeof callbackError === 'function') xhr.onerror = callbackError;
-        xhr.send();
-        return xhr;
+
+    /**
+     * Storage in memory
+     * if `object` is a Object - set new objects
+     * if `object` is a String - return object by name
+     * if `object` is a not set - return all objects
+     *
+     * @param object
+     * @param keyWithValue
+     * @returns {*}
+     */
+    app.store = function (object, keyWithValue) {
+
+        if(typeof object === 'string' && keyWithValue !== undefined) {
+            var _object = {};
+            _object[object] = keyWithValue;
+            return this.store(_object);
+        }
+
+        if (typeof object === 'object') {
+            for (var key in object)
+                this._stackStorage[key] = object[key];
+            return this._stackStorage;
+        }
+        else if (typeof object === 'string')
+            return this._stackStorage[object] ? this._stackStorage[object] : null;
+
+        else if (object === undefined)
+            return this._stackStorage;
     };
 
     /**
-     * Templates creator
-     * @param stringData
-     * @param params
+     * Storage for static calls
+     * @type {{}}
+     * @private
+     */
+    app._stackStorage = {};
+
+
+    /**
+     * Simple router
+     *
+     * @param uri
+     * @param callback
+     */
+    app.route = function (uri, callback, hash, query) {
+        uri = uri || '';
+        var reg = new RegExp('^' + uri + '$', 'i'),
+            path = app.routePath.call(this, hash, query);
+
+        if (reg.test(path)) {
+            callback.call(this);
+            return true;
+        }
+        return false;
+    };
+
+    /**
+     *
+     * @returns {string}
+     */
+    app.routePath = function (hash, query) {
+        var path = window.location.pathname;
+        if (hash) path += window.location.hash;
+        if (query) path += window.location.search;
+        if (this.url && path.indexOf(this.url) === 0) {
+            path = path.substr(this.url.length);
+            if (path.slice(0, 1) !== '/') path = '/' + path;
+        }
+        return path;
+    };
+
+
+    /**
+     * Simple template builder
+     * @param stringData    source string data with marks "{{key1}}"
+     * @param params        object {key1 : 'value'}
      * @returns {*}
      */
-    proto.assign = function  (stringData, params) {
-        if(typeof params === 'object')
-            for(var k in params)
-                stringData = stringData.replace(new RegExp('{{'+k+'}}', 'gi'), params[k]);
+    app.assign = function (stringData, params) {
+        if (typeof params === 'object')
+            for (var k in params)
+                stringData = stringData.replace(new RegExp('{{' + k + '}}', 'gi'), params[k]);
 
         return stringData;
     };
 
-    /**
-     * Simple router
-     * @param urlPath
-     * @param callback
-     */
-    proto.route = function(urlPath, callback){
-        urlPath = urlPath || '';
-        var reg = new RegExp('^'+urlPath+'$', 'i'),
-            path = window.location.pathname;
-
-        if(path.indexOf(this.url) === 0){
-            path = path.substr(this.url.length);
-            if(reg.test(path)) callback.call(this)
-        }
-        return this;
-    };
 
     /**
      * Simple inject data to HTMLElement [by selector]
@@ -316,11 +244,11 @@
      * @param data
      * @returns {*}
      */
-    proto.inject = function(selector, data){
-        if(typeof selector === 'string') selector = this.query(selector);
-        if(typeof selector === 'object' && selector.nodeType === Node.ELEMENT_NODE) {
+    app.inject = function (selector, data) {
+        if (typeof selector === 'string') selector = this.query(selector);
+        if (typeof selector === 'object' && selector.nodeType === Node.ELEMENT_NODE) {
             selector.textContent = '';
-            if(typeof data === 'object')
+            if (typeof data === 'object')
                 selector.appendChild(data);
             else
                 selector.innerHTML = data;
@@ -329,6 +257,7 @@
         return null;
     };
 
+
     /**
      * Query DOM Element by selector
      *
@@ -336,54 +265,42 @@
      * @param parent|callback
      * @returns {Element}
      */
-    proto.query = function(selector, parent){
-        var callback, elem, from = document;
-
-        if(typeof parent === 'function')
-            callback = parent;
-        else if(typeof parent === 'string')
-            from = document.querySelector(parent);
-        else if(typeof parent === 'object' && parent.nodeType === Node.ELEMENT_NODE)
-            from = parent;
-
-        if(from)
-            elem = from.querySelector(selector);
-
-        if(elem && typeof callback === 'function')
-            callback.call(this, elem);
-
-        // debug
-        if(this.debug && !elem)
-            console.error("Error query DOM Element by selector ", selector);
-
-        return elem;
+    app.query = function (selector, parent) {
+        var elems = this.queryAll(selector, parent);
+        if (elems && elems.length > 0)
+            return elems[0];
+        return null;
     };
+
 
     /**
      * Query DOM Elements by selector
+     *
      * @param selector
-     * @param parent|callback
-     * @returns {Array.<T>}
+     * @param parent    callback
+     * @returns {*}
      */
-    proto.queryAll = function(selector, parent){
+    app.queryAll = function (selector, parent) {
+        var callback, _elemsList, elems, from = document;
 
-        var callback, elems, from = document;
-
-        if(typeof parent === 'function')
+        if (typeof parent === 'function')
             callback = parent;
-        else if(typeof parent === 'string')
+        else if (typeof parent === 'string')
             from = document.querySelector(parent);
-        else if(typeof parent === 'object' && parent.nodeType === Node.ELEMENT_NODE)
+        else if (typeof parent === 'object' && parent.nodeType === Node.ELEMENT_NODE)
             from = parent;
 
-        if(from)
-            elems = [].splice.call(from.querySelectorAll(selector));
 
-        if(elems.length > 0 && typeof callback == 'function')
+        if (from) {
+            elems = [].slice.call(from.querySelectorAll(selector));
+        }
+
+
+        if (elems.length > 0 && typeof callback == 'function')
             callback.call(this, elems);
 
         // debug
-        if(this.debug && !elems)
+        if (this.debug && !elems)
             console.error("Error queryAll DOM Elements by selector ", selector);
 
         return elems;
@@ -391,61 +308,213 @@
 
 
     /**
-     * Apply an callback to each element of list
-     * @param list      Array|Object
+     *
+     * @param list
      * @param callback
      * @param tmp
-     * @returns {*}
      */
-    proto.each = function (list, callback, tmp) {
-        //tmp = tmp !== undefined ? tmp : {};
-        if (list instanceof Array) {
-            for (var i = 0; i < list.length; i++) {
-                callback.call(this, list[i], i, tmp);
-            }
-        } else if (list instanceof Object) {
-            for (var k in list) {
-                callback.call(this, list[k], k, tmp);
-            }
-        }
-        return list;
+    app.each = function (list, callback, tmp) {
+        var i = 0;
+        if (list instanceof Array)
+            for (i = 0; i < list.length; i++) callback.call({}, list[i], i, tmp);
+        else
+            for (i in list) callback.call({}, list[i], i, tmp);
     };
 
 
     /**
-     * Execute callback function if DOM is loaded
-     * @param callback
+     *
+     * @type {{url: string, debug: boolean, constructsType: string, _lastKey: null, _stackRequires: {}, _stackStorage: {}, _stackConstructs: Array}}
      */
-    proto.domLoaded = function(callback){
-        if(document.querySelector('body')) {
-            callback.call({});
-        }else{
-            document.addEventListener('DOMContentLoaded', function(){callback.call({})}, false);
-        }
+    app.prototype._properties = {
+
+        /**
+         * Base url
+         */
+        path: '/',
+
+        /**
+         * Current script version
+         */
+        version: version,
+
+        /**
+         * Debug mod
+         */
+        debug: true,
+
+        /**
+         * Startup type of constructor for modules
+         * Type: false - off constructor
+         *      'runtime' - perform during the assignment of namespace
+         *      'gather' - save in the stack,
+         *          for call and execute all constructor methods, use .constructsStart()
+         */
+        constructsType: 'runtime',
+
+        _lastKey: null,
+        _stackRequires: {},
+        _stackStorage: {},
+        _stackConstructs: []
     };
 
 
-    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-     * STATIC METHODS
-     * uses: NamespaceApplication.afterDOMLoaded()
-     * uses: NamespaceApplication.request()
-     * uses: NamespaceApplication.assign()
-     * uses: NamespaceApplication.script()
-     * uses: NamespaceApplication.style()
-     * uses: NamespaceApplication.file()
+    /**
+     * Create namespace for module-script
+     * @param namespace  "Controller.Name" or "Action.Name"
+     * @param callback
+     * @param args
+     * @returns {{}}
      */
-    app.domLoaded = proto.domLoaded;
-    app.request = proto.request;
-    app.assign = proto.assign;
-    app.script = proto.script;
-    app.style = proto.style;
-    app.file = proto.file;
+    app.prototype.namespace = function (namespace, callback, args) {
+        var
+            name,
+            path = namespace.split('.'),
+            tmp = this || {},
+            len = path.length;
 
-    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-     * GLOBAL NAME
+        for (var i = 0; i < len; i++) {
+            name = path[i].trim();
+            if (typeof tmp[name] !== 'object') {
+                tmp[name] = (i + 1 >= len) ? (callback ? callback.call(tmp, this, {}) : {}) : {};
+                tmp = tmp[name];
+            } else
+                tmp = tmp[name];
+        }
+
+        if (typeof tmp === "object" && tmp.construct) {
+            args = Array.isArray(args) ? args : [];
+            if (this.constructsType == 'runtime') {
+                tmp.construct.apply(tmp, args);
+            }
+            else if (this.constructsType == 'gather')
+                this._stackConstructs.push(tmp);
+        }
+
+        return tmp;
+    };
+
+
+    /**
+     * Run all modules constructs
+     * @param args
+     * @returns {app|NamespaceApplication}
+     */
+    app.prototype.constructsStart = function (args) {
+        app.each(this._stackConstructs, function (item, index) {
+            item.construct.apply(item, args);
+        }, args);
+        this._stackConstructs = [];
+        return this;
+    };
+
+
+    /**
+     * Designate a list of scripts for loading
+     * @param key           list key (identifier)
+     * @param path          array with scripts url
+     * @param oncomplete    executing when all scripts are loaded
+     * @param onerror
+     * @returns {app|NamespaceApplication}
+     */
+    app.prototype.require = function (key, path, oncomplete, onerror) {
+        this._lastKey = key;
+
+        this._stackRequires[key] = {
+            src: Array.isArray(path) ? path : [path],
+            oncomplete: oncomplete,
+            onerror: onerror
+        };
+        return this;
+    };
+
+
+    /**
+     * Start loading the list of scripts by key (identifier)
+     *
+     * @param key
+     * @returns {app|NamespaceApplication}
+     */
+    app.prototype.requireStart = function (key) {
+        var source;
+        key = key || this._lastKey;
+        if (this._stackRequires[key]) {
+            this._recursive_load_script(0, key);
+        } else {
+            console.error("Require source not found! Key: " + key + " not exist!");
+        }
+        return this;
+    };
+
+
+    /**
+     *
+     * @param i
+     * @param key
+     * @private
+     */
+    app.prototype._recursive_load_script = function (i, key) {
+        var self = this,
+            source = this._stackRequires[key];
+
+        if (source.src[i]) {
+            if (!Array.isArray(source.node)) source.node = [];
+
+            source.node.push(app.script(source.src[i], function () {
+                self._recursive_load_script(++i, key);
+            }, source.onerror));
+
+        } else if (i === source.src.length)
+            source.oncomplete.call(self, source.node);
+        else
+            self._recursive_load_script(++i, key);
+    };
+
+
+    /**
+     * Apply properties object to instance properties
+     * @param properties
+     * @returns {app|NamespaceApplication}
+     */
+    app.prototype.setProperties = function (properties) {
+
+        if (typeof properties !== 'object') properties = {};
+
+        var key, props = app.extend(this._properties, properties, function (key, obj, src) {
+            return key.slice(0, 1) !== '_';
+        });
+
+        for (key in props)
+            if (this[key] === undefined)
+                this[key] = props[key];
+
+        return this;
+    };
+
+
+    /**
+     * Run all modules constructs
+     * @param args
+     * @returns {app|NamespaceApplication}
+     */
+    app.prototype.constructsStart = function (args) {
+        this.each(this._stackConstructs, function (item, index) {
+            if (typeof item.construct === 'function')
+                item.construct.apply(item, args);
+        }, args);
+        this._stackConstructs = [];
+        return this;
+    };
+
+    app.prototype.uri = function (uri) {
+        var _uri = uri ? this.path + '/' + uri : this.path;
+        _uri = _uri.replace(/\/+/ig,'/');
+        return _uri.length > 1 && _uri.slice(0,1) != '/' ? '/' + _uri : _uri;
+    };
+
+    /**
+     * @type {app}
      */
     window.NamespaceApplication = app;
-    window.NamespaceApplication.prototype = proto;
-    window.NamespaceApplication.prototype.constructor = app;
 
-})(window);
+})();

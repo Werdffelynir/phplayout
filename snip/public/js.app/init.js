@@ -2,10 +2,11 @@
 
 window.App = new NamespaceApplication({
 
-    uri: location.pathname,
-    url: location.origin + location.pathname,
-    uriLibs: location.pathname + '/public/js.libs/',
-    uriView: location.pathname + '/public/js.app/view/',
+    //uri: location.pathname,
+    //url: location.origin + location.pathname,
+    //uriLibs: location.pathname + '/public/js.libs/',
+    //uriView: location.pathname + '/public/js.app/view/',
+    path: '/',
     debug: true,
     token: null,
     constructsType: false
@@ -13,11 +14,11 @@ window.App = new NamespaceApplication({
 
 App.require('libs',
     [
-        App.uriLibs + 'aj.js',
-        App.uriLibs + 'dom.js',
-        App.uriLibs + 'util.js',
-        App.uriLibs + 'piece.js',
-        App.uriLibs + 'linker.js'
+        App.path + 'public/js.libs/aj.js',
+        App.path + 'public/js.libs/dom.js',
+        App.path + 'public/js.libs/util.js',
+        App.path + 'public/js.libs/piece.js',
+        App.path + 'public/js.libs/linker.js'
     ],
     initLibs, initError);
 
@@ -25,13 +26,13 @@ App.require('libs',
 App.require('dependence',
     [
         // Common tools
-        App.uri + 'public/js.app/tool.js',
+        App.path + 'public/js.app/tool.js',
 
         // Actions
-        App.uri + 'public/js.app/action/editor.js',
+        App.path + 'public/js.app/action/editor.js',
 
          // Controllers
-        App.uri + 'public/js.app/controller/page.js'
+        App.path + 'public/js.app/controller/page.js'
 
     ],
     initDependence, initError);
