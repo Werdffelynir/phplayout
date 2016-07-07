@@ -3,22 +3,26 @@
 require_once('../src/SLayout.php');
 require_once('classes/SRouter.php');
 require_once('classes/SPDO.php');
+require_once('models/Item.php');
+require_once('models/Relation.php');
 require_once('controllers/Main.php');
 
 
 /**
  * Uri Routing
  */
+$basePath = '/layout/snip/';
 
-$SRouter = new SRouter(['base_path'=>'/layout/snip/']);
+$SRouter = new SRouter(['base_path'=>$basePath]);
 $SRouter->forceRun(true);
 
 
 /**
  * Work with templates
  */
-$SLayout = new SLayout([]);
 
+$SLayout = new SLayout([]);
+SLayout::value('url',$basePath);
 
 /**
  * Work with database
@@ -33,11 +37,15 @@ $Controller = new Main($SRouter, $SLayout, $SPDO);
 
 
 $SRouter->get('/', [$Controller,'actionIndex']);
+$SRouter->get('/c/:p!', [$Controller,'actionCategory']);
+$SRouter->get('/editor/:p?', [$Controller,'actionEditor']);
+
+/*
 $SRouter->post('/api/insert', [$Controller,'actionInsert']);
 $SRouter->post('/api/update', [$Controller,'actionUpdate']);
 $SRouter->post('/api/delete', [$Controller,'actionDelete']);
 $SRouter->post('/api/all_category', [$Controller,'actionAllCategories']);
-$SRouter->post('/api/all_subcategory/:n!', [$Controller,'actionAllSubcategories']);
+$SRouter->post('/api/all_subcategory/:n!', [$Controller,'actionAllSubcategories']);*/
 
 //$SRouter->get('/c/<category>:a!/<subcategory>:p?', [$Controller,'actionIndex']);
 

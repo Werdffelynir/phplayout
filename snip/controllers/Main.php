@@ -21,23 +21,68 @@ class Main
      */
     public $db = null;
 
+    public $modelItem = null;
+
+    public $modelRelation = null;
+
     public function __construct($SRouter, $SLayout, $SPDO)
     {
         $this->Router = $SRouter;
         $this->Layout = $SLayout;
         $this->db = $SPDO;
+
+        $this->modelItem = new Item($this->db);
+        $this->modelRelation = new Relation($this->db);
     }
 
     public function actionIndex()
     {
-
+        $category =   $this->modelItem->getCategory();
         $this->Layout
-            ->setPosition('menu','menu')
-            ->setPosition('content','content')
-            ->setPosition('editor','content.editor')
+            ->setPosition('navigation','navigation', ['category'=>$category])
+            ->setPosition('sidebar','sidebar')
+            ->setPosition('content','content.index')
             ->outTemplate();
     }
 
+    public function actionCategory()
+    {
+
+        $this->Layout
+            ->setPosition('navigation','navigation')
+            ->setPosition('sidebar','sidebar')
+            ->setPosition('content','content.category')
+            ->outTemplate();
+    }
+
+    public function actionEditor()
+    {
+
+        $this->Layout
+            ->setPosition('navigation','navigation')
+            ->setPosition('sidebar','sidebar')
+            ->setPosition('content','content.editor')
+            ->outTemplate();
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
     public function actionInsert()
     {
         $response = [
@@ -167,5 +212,5 @@ class Main
     public function actionGetAllByDeep($deep)
     {
         return $this->db->select('*', 'item', 'deep = ?', [(int)$deep]);
-    }
+    }*/
 }

@@ -2,10 +2,7 @@
 
 window.App = new NamespaceApplication({
 
-    uri: location.pathname,
-    url: location.origin + location.pathname,
-    uriLibs: location.pathname + '/public/js.libs/',
-    uriView: location.pathname + '/public/js.app/view/',
+    uri: '/layout/snip/',
     debug: true,
     token: null,
     constructsType: false
@@ -13,11 +10,11 @@ window.App = new NamespaceApplication({
 
 App.require('libs',
     [
-        App.uriLibs + 'aj.js',
-        App.uriLibs + 'dom.js',
-        App.uriLibs + 'util.js',
-        App.uriLibs + 'piece.js',
-        App.uriLibs + 'linker.js'
+        App.uri + 'public/js.libs/aj.js',
+        App.uri + 'public/js.libs/dom.js',
+        App.uri + 'public/js.libs/util.js',
+        App.uri + 'public/js.libs/piece.js',
+        App.uri + 'public/js.libs/linker.js'
     ],
     initLibs, initError);
 

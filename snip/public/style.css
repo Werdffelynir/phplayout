@@ -25,11 +25,13 @@ a:hover{color: #db73d8;}
 #sidebar, #sidebar_two{
     border-left: 2px solid #3f3746;
     border-right: 2px solid #3f3746;
-}
-#sidebar>div, #sidebar_two>div{
     min-height: 600px;
     background-color: #453c4d;
 }
+/*#sidebar>div, #sidebar_two>div{
+    min-height: 600px;
+    background-color: #453c4d;
+}*/
 #sidebar li > a, #sidebar_two li > a {
     width: 100%;
     display: block;

@@ -1,17 +1,22 @@
-<!doctype html>
+<?php
+$url = SLayout::value('url');
+
+
+
+?><!doctype html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Document Task</title>
 
-    <link rel="stylesheet" href="public/grid.css">
-    <link rel="stylesheet" href="public/style.css">
+    <link rel="stylesheet" href="<?=$url?>public/grid.css">
+    <link rel="stylesheet" href="<?=$url?>public/style.css">
 
-    <link rel="stylesheet" href="public/fontello/css/fontello.css">
-    <link rel="stylesheet" href="public/fontello/css/animation.css">
+    <link rel="stylesheet" href="<?=$url?>public/fontello/css/fontello.css">
+    <link rel="stylesheet" href="<?=$url?>public/fontello/css/animation.css">
 
-    <script src="public/js.libs/ns.application.js" type="application/javascript"></script>
-    <script src="public/js.app/init.js" type="application/javascript"></script>
+    <script src="<?=$url?>public/js.libs/ns.application.js" type="application/javascript"></script>
+    <script src="<?=$url?>public/js.app/init.js" type="application/javascript"></script>
 
     <style>
         .piece-box {
@@ -50,60 +55,15 @@
 
 
     <div id="navigation">
-        <ul>
-            <li><a href="#link1">PHP</a></li>
-            <li><a href="#link2">JavaScript</a></li>
-            <li><a href="#link3">HTML/CSS</a></li>
-            <li><a href="#link4">Server</a></li>
-            <li><a href="#link5">Python</a></li>
-            <li><a href="#link6">ActionScript</a></li>
-            <li><a href="#link7">C#</a></li>
-            <li><a href="#link8">Java</a></li>
-            <li><a href="#link9">Linux</a></li>
-            <li><a href="#link10">Private</a></li>
-        </ul>
+        <?php SLayout::outPosition('navigation')?>
     </div>
     <div id="header">header</div>
     <div id="container" class="tbl">
         <div id="sidebar" class="tbl_cell valign_top width_20">
-            <div>
-                <ul>
-                    <li><a href="#link1">PHP</a></li>
-                    <li><a href="#link2">JavaScript</a></li>
-                    <li><a href="#link3">HTML/CSS itaque itaquaque</a></li>
-                    <li><a href="#link4">Server</a></li>
-                    <li><a href="#link5">Python itaque</a></li>
-                    <li><a href="#link6">ActionScript itaqueitaque</a></li>
-                    <li><a href="#link7">C#</a></li>
-                    <li><a href="#link8">Java</a></li>
-                    <li><a href="#link9">Linux</a></li>
-                    <li><a href="#link10">Private Javaffava Rcri Fptript</a></li>
-                    <li><a href="#link1">PHP JavaScript</a></li>
-                    <li><a href="#link2">JavaScript</a></li>
-                    <li><a href="#link3">HTML/CSS</a></li>
-                    <li><a href="#link4">ServerSerServerver</a></li>
-                    <li><a href="#link5">Pythe Eee rvererver</a></li>
-                    <li><a href="#link6">ActionScript itaque itaque</a></li>
-                    <li><a href="#link7">C#</a></li>
-                    <li><a href="#link8">Java</a></li>
-                    <li><a href="#link9">Linux</a></li>
-                    <li><a href="#link10">PrivatePrivatePrivate</a></li>
-                    <li><a href="#link1">PHP</a></li>
-                    <li><a href="#link2">JavaScript</a></li>
-                    <li><a href="#link3">HTML/CSS Private Private</a></li>
-                    <li><a href="#link4">Server</a></li>
-                    <li><a href="#link5">Python</a></li>
-                    <li><a href="#link6">ActionScript</a></li>
-                    <li><a href="#link7">C#</a></li>
-                    <li><a href="#link8">Java itaque itaque</a></li>
-                    <li><a href="#link9">Linux itaque</a></li>
-                    <li><a href="#link10">Private</a></li>
-                </ul>
-            </div>
+            <?php SLayout::outPosition('sidebar')?>
         </div>
         <div id="content" class="tbl_cell valign_top">
-            <?php SLayout::outPosition('editor')?>
-
+            <?php SLayout::outPosition('content')?>
         </div>
     </div>
     <div id="footer">footer</div>
