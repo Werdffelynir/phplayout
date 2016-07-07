@@ -44,7 +44,7 @@ class SRouter
      *      'domain'=> '',
      *      // Базовый путь к роутеру, если индекс находится не в корене, нужно указать путь.
      *      // например если сайт лежит в под-директории (www/mysite.com/some/index.php): /some/
-     *      'base_path'=> '',
+     *      'path'=> '',
      *      // Другие параметры настройки,
      *      'request_uri'=>'string',
      *      'request_method'=>'string',
@@ -60,7 +60,7 @@ class SRouter
         ];
 
         $this->domain = (empty($params['domain'])) ?  $_SERVER['HTTP_HOST'] : $params['domain'];
-        $this->basePath = (empty($params['base_path'])) ? '/' : '/'.trim($params['base_path'],'/').'/';
+        $this->basePath = (empty($params['path'])) ? '/' : '/'.trim($params['path'],'/');
         $this->requestMethod = (empty($params['request_method'])) ?  strtoupper($_SERVER['REQUEST_METHOD']) : $params['request_method'];
         $this->baseScriptName = (empty($params['base_script_name'])) ? pathinfo($_SERVER['SCRIPT_FILENAME'])['basename'] : $params['base_script_name'];
 

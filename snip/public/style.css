@@ -3,7 +3,7 @@ html,body{
     background-color: #d2d2d2;
     color: #6f6f6f;
     font-size: 90%;
-    font-family: sans-serif;
+    font-family: 'Open Sans', sans-serif;
 }
 ul, li, ol{margin: 0; padding: 0;}
 li{list-style: none;}
@@ -15,18 +15,12 @@ a:hover{color: #db73d8;}
     margin: 0 auto;
 }
 #header{
-    line-height: 30px;
-    text-align: center;
-    color: #cbb0e3;
     background-color: #453c4d;
-    font-size: 120%;
 }
 #container{}
 #sidebar, #sidebar_two{
     border-left: 2px solid #3f3746;
     border-right: 2px solid #3f3746;
-}
-#sidebar>div, #sidebar_two>div{
     min-height: 600px;
     background-color: #453c4d;
 }
@@ -70,15 +64,15 @@ a:hover{color: #db73d8;}
     display: inline;
 }
 #navigation li a{
-    color: #cbb0e3;
+    color: #d68818;
+    font-weight: bold;
 }
 #navigation li a:hover{
-    color: #dec0f8;
+    color: #ffed61;
     background-color: #241f28;
 }
 #navigation li a{
     display: inline-block;
-    /*line-height: 30px;*/
     padding: 5px 10px;
     text-align: center;
     text-decoration: none;
@@ -86,14 +80,17 @@ a:hover{color: #db73d8;}
 .article{
     padding: 10px;
 }
-
+.nav_right{
+    width: 150px;
+    padding-right: 10px;
+}
 
 
 
 
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
-.btn_inline {
+.btn_inline_round {
     display: inline-block;
     padding: 4px 10px;
     text-align: center;
@@ -105,7 +102,7 @@ a:hover{color: #db73d8;}
     margin: 2px 2px;
     cursor: pointer;
 }
-.btn_inline:hover {
+.btn_inline_round:hover {
     display: inline-block;
     background-color: #d1d1d1;
     color: #202020;
@@ -113,19 +110,40 @@ a:hover{color: #db73d8;}
 
 .btn_inline_dark{
     display: inline-block;
-}
-.btn_inline_dark>a{
-    display: block;
     padding: 4px 10px;
+    background-color: #453c4d;
+    color: #a7aba1;
     text-align: center;
-    text-decoration: none;
+    cursor: pointer;
 }
-.btn_inline_dark a:hover{
-    display: inline-block;
-    color: #dec0f8;
-    background-color: #241f28;
+a.btn_inline_dark, .btn_inline_dark a{
+    text-decoration: none;
+    background-color: #453c4d;
+    color: #a7aba1;
 }
 
+.btn_inline_dark:hover, .btn_inline_dark a:hover{
+    display: inline-block;
+    background-color: #241f28;
+    color: #dec0f8;
+}
+
+
+.btn_inline_orange{
+    display: inline-block;
+    padding-left: 10px;
+    color: #e5921a;
+    text-align: center;
+    font-size: 90%;
+    cursor: pointer;
+}
+a.btn_inline_orange:hover{
+    text-decoration: underline;
+}
+a.btn_inline_orange, .btn_inline_orange a{
+    text-decoration: none;
+    color: #e5921a;
+}
 
 
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
@@ -136,6 +154,13 @@ a:hover{color: #db73d8;}
 #editor_menu{
     color: #dec0f8;
     background-color: #38303f;
+}
+#editor_menu>span.btn_inline_dark{
+    color: #dec0f8;
+    background-color: #38303f;
+}
+#editor_menu>span.btn_inline_dark:hover{
+    background-color: #241f28;
 }
 #editor form{
 
@@ -180,27 +205,12 @@ span.relation{
 }
 
 span.icon_btn{
-    display: inline-block;
-    width: 18px;
-    height: 18px;
-    border-radius: 10px;
-    background-color: #727272;
-    color: #e7e7e7;
     font-weight: bold;
-    line-height: 18px;
     box-shadow: 0 0 5px -3px #00000080;
     cursor: pointer;
 }
-span.icon_btn>i{
-    font-size: 15px;
-    margin-left: -1px;
-}
-span.icon_btn>i.icon-plus{
-    line-height: 19px;
-}
 span.icon_btn:hover{
-    background-color: #444444;
-    color: #fdfdfd;
+    color: #444444;
 }
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 .loader_content {
@@ -284,10 +294,39 @@ ul.categories_list li:hover, ul.subcategories_list li:hover{
 
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
-
-
-
-
+form[name=search]{}
+form[name=search] input[type=text]{
+    width: 200px;
+    border: none;
+    background-color: rgb(73, 74, 83);
+    color: #b8b8b8;
+    padding: 4px 10px;
+}
+form[name=search] input[type=text]:focus{
+    background-color: rgb(86, 87, 98);
+    color: #FFF;
+}
+form[name=search] input[type=submit]{
+    margin-left: 3px;
+    padding: 3px 15px 3px 3px;
+    border:none;
+    border-left: 5px solid #241f28;
+    background-color: #3a3140;
+    color: #d68818;
+    font-weight: bold;
+    cursor: pointer;
+}
+form[name=search] input[type=submit]:hover{
+    background-color: #241f28;
+    color: #ffed61;
+}
+form[name=search] i {
+    color: #d68818;
+}
+.topmenu > .btn_inline_dark{
+    color: #dec0f8;
+    font-weight: bold;
+}
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
 

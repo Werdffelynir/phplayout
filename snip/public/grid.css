@@ -49,6 +49,9 @@
 .txt_left,.text_left{text-align:left}
 .txt_right,.text_right{text-align:right}
 .txt_center,.text_center{text-align:center}
+.font_bold{font-weight: bold}
+.font_italic{font-style: italic}
+.font_normal{font-style: normal; font-weight: normal}
 .mrg_top{margin-top:0}
 .mrg_bottom{margin-bottom: 0}
 .mrg_left{margin-left: 0}

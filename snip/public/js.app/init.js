@@ -1,16 +1,11 @@
 
-
 window.App = new NamespaceApplication({
-
-    //uri: location.pathname,
-    //url: location.origin + location.pathname,
-    //uriLibs: location.pathname + '/public/js.libs/',
-    //uriView: location.pathname + '/public/js.app/view/',
     path: '/',
     debug: true,
     token: null,
     constructsType: false
 });
+
 
 App.require('libs',
     [

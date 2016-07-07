@@ -8,6 +8,11 @@
  */
 class Main
 {
+
+    /**
+     * @var array|null
+     */
+    public $params = null;
     /**
      * @var SRouter
      */
@@ -20,24 +25,100 @@ class Main
      * @var \db\SPDO
      */
     public $db = null;
+    /**
+     * @var Item|null
+     */
+    public $modelItem = null;
+    /**
+     * @var null|Relation
+     */
+    public $modelRelation = null;
 
-    public function __construct($SRouter, $SLayout, $SPDO)
+    /**
+     * Main constructor.
+     * @param array $params
+     * @param SRouter $SRouter
+     * @param SLayout $SLayout
+     * @param db\SPDO $SPDO
+     */
+    public function __construct($params, $SRouter, $SLayout, $SPDO)
     {
+        $this->params = $params;
         $this->Router = $SRouter;
         $this->Layout = $SLayout;
         $this->db = $SPDO;
+
+        $this->modelItem = new Item($this->db);
+        $this->modelRelation = new Relation($this->db);
+
+        $this->commonLayoutVariables();
+    }
+
+
+    public function commonLayoutVariables()
+    {
+        // bases layout variables
+        $this->Layout->Controller = $this;
+        $this->Layout->value('url', $this->Router->getUrl());
+        $this->Layout->value('urlFull', $this->Router->getFullUrl());
+    }
+
+
+    public function commonLayoutPositions()
+    {
+        // common views parts
+        $categories = $this->modelItem->getCategories();
+
+        $this->Layout
+            ->setPosition('navigation','navigation', ['categories'=>$categories])
+            ->setPosition('header','header',[]);
     }
 
     public function actionIndex()
     {
-
+        $this->commonLayoutPositions();
         $this->Layout
-            ->setPosition('menu','menu')
-            ->setPosition('content','content')
-            ->setPosition('editor','content.editor')
+            ->setPosition('sidebar','sidebar')
+            ->setPosition('content','content.index')
             ->outTemplate();
     }
 
+    public function actionCategory()
+    {
+        $this->commonLayoutPositions();
+        $this->Layout
+            ->setPosition('sidebar','sidebar')
+            ->setPosition('content','content.category')
+            ->outTemplate();
+    }
+
+    public function actionEditor()
+    {
+        $this->commonLayoutPositions();
+        $this->Layout
+            ->setPosition('sidebar','sidebar')
+            ->setPosition('content','content.editor')
+            ->outTemplate();
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
     public function actionInsert()
     {
         $response = [
@@ -167,5 +248,5 @@ class Main
     public function actionGetAllByDeep($deep)
     {
         return $this->db->select('*', 'item', 'deep = ?', [(int)$deep]);
-    }
+    }*/
 }

@@ -36,7 +36,7 @@ class SLayout
      * SLayout constructor.
      * @param $config
      */
-    public function __construct($config)
+    public function __construct($config = [])
     {
         foreach($this->defConfig as $dcKey => $dcVal) {
             if(!empty($config[$dcKey]))
@@ -67,6 +67,13 @@ class SLayout
             return ob_get_clean();
         }else
             return false;
+    }
+
+    public function __call($name, array $args)
+    {
+        var_dump($name);
+        if($name === 'value' || $name === 'val' )
+            return call_user_func_array( [$this, 'value'], $args );
     }
 
     /**

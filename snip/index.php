@@ -3,41 +3,47 @@
 require_once('../src/SLayout.php');
 require_once('classes/SRouter.php');
 require_once('classes/SPDO.php');
+require_once('models/Item.php');
+require_once('models/Relation.php');
 require_once('controllers/Main.php');
 
+$params = include 'config/main.php';
 
-/**
- * Uri Routing
- */
-
-$SRouter = new SRouter(['base_path'=>'/layout/snip/']);
+$SRouter = new SRouter($params['router']);
 $SRouter->forceRun(true);
 
 
 /**
  * Work with templates
  */
-$SLayout = new SLayout([]);
+$SLayout = new SLayout();
 
 
 /**
  * Work with database
  */
-$SPDO = new \db\SPDO('sqlite:database/treen.sqlite3');
+$SPDO = new \db\SPDO($params['db']['dsn']);
 
 
 /**
  * Base controller
  */
-$Controller = new Main($SRouter, $SLayout, $SPDO);
+$Controller = new Main($params, $SRouter, $SLayout, $SPDO);
 
 
 $SRouter->get('/', [$Controller,'actionIndex']);
+$SRouter->get('/c/:p!', [$Controller,'actionCategory']);
+$SRouter->get('/editor/:p?', [$Controller,'actionEditor']);
+
+
+
+
+/*
 $SRouter->post('/api/insert', [$Controller,'actionInsert']);
 $SRouter->post('/api/update', [$Controller,'actionUpdate']);
 $SRouter->post('/api/delete', [$Controller,'actionDelete']);
 $SRouter->post('/api/all_category', [$Controller,'actionAllCategories']);
-$SRouter->post('/api/all_subcategory/:n!', [$Controller,'actionAllSubcategories']);
+$SRouter->post('/api/all_subcategory/:n!', [$Controller,'actionAllSubcategories']);*/
 
 //$SRouter->get('/c/<category>:a!/<subcategory>:p?', [$Controller,'actionIndex']);
 

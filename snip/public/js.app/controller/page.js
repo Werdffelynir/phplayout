@@ -18,7 +18,6 @@ if(App.namespace){App.namespace('Controller.Page', function(App) {
 
     page.loaded = function(){
         App.Action.Editor.run();
-        App.Action.Editor.attachButtonEvents();
 
 
 
