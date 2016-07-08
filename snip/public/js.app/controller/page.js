@@ -1,9 +1,15 @@
-if(App.namespace){App.namespace('Controller.Page', function(App) {
+/**
+ * @type NamespaceApplication App
+ */
+if (App.namespace) { App.namespace('Controller.Page', function(App) {
+
 
     /**
      * @namespace App.Controller.Page
      */
-    var page = {};
+    var page = {
+        route: App.routePath()
+    };
 
     /**
      * @namespace App.Controller.Page.construct
@@ -17,7 +23,12 @@ if(App.namespace){App.namespace('Controller.Page', function(App) {
     };
 
     page.loaded = function(){
-        App.Action.Editor.run();
+
+        if (page.route == '/') {
+            console.log('main page');
+        } else if (page.route == '/editor') {
+            App.Action.Editor.run();
+        }
 
 
 

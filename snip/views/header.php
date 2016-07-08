@@ -18,7 +18,7 @@ $url = $this->value('url');
             <i class="icon-rocket"><input type="submit" value="Find" class="btn_inline_dark"></i>
         </form>
     </div>
-    <div class="tbl_cell width_55 text_right topmenu">
+    <div class="tbl_cell width_40 text_right topmenu">
 
         <a href="<?=$url?>editor" class="btn_inline_dark">Create</a>
         <a href="<?=$url?>settings" class="btn_inline_dark">Settings</a>

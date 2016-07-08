@@ -55,10 +55,12 @@ if(App.namespace){App.namespace('Action.Editor', function(App) {
      * @namespace App.Action.Editor.attachButtonEvents
      */
     _.titleToLink = function(){
-        Dom(_.node['title']).on('blur', function(event){
-            if(Util.isEmpty(_.node['link'].value))
-                _.node['link'].value = Util.toTranslit(_.node['title'].value.trim()).toLowerCase();
-        });
+        if(_.node['title']) {
+            Dom(_.node['title']).on('blur', function(event){
+                if(Util.isEmpty(_.node['link'].value))
+                    _.node['link'].value = Util.toTranslit(_.node['title'].value.trim()).toLowerCase();
+            });
+        }
     };
 
     _.deepSwitcher = function(){

@@ -200,13 +200,12 @@ span.relation{
     border-radius: 10px;
     background-color: #ddd;
     margin: 2px 0;
-    box-shadow: 0 0 2px -1px #00000080;
+    box-shadow: 0 0 2px -1px rgba(0, 0, 0, 0.82);
     width: 99%;
 }
 
 span.icon_btn{
     font-weight: bold;
-    box-shadow: 0 0 5px -3px #00000080;
     cursor: pointer;
 }
 span.icon_btn:hover{

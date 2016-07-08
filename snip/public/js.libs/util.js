@@ -137,10 +137,31 @@
         return false;
     };
 
+    /**
+     *
+     * @param needle
+     * @param haystack
+     * @returns {boolean}
+     */
+    util.inArr = function (needle, haystack) {
+        if(Array.isArray(haystack))
+            return haystack.indexOf(needle) !== -1;
+    };
+
+    /**
+     * 
+     * @param obj
+     * @returns {Array.<T>}
+     */
     util.objToArr = function (obj) {
         return [].slice.call(obj);
     };
 
+    /**
+     * 
+     * @param obj
+     * @returns {Array}
+     */
     util.realObjToArr = function (obj) {
         var arr = [];
         for(var key in obj)
@@ -148,6 +169,11 @@
         return arr;
     };
 
+    /**
+     * 
+     * @param func
+     * @returns {temporary}
+     */
     util.cloneFunction = function(func) {
         var temp = function temporary() { return func.apply(this, arguments); };
         for(var key in this) {
