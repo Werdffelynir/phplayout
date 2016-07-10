@@ -91,6 +91,20 @@
         return linker.on('click', id,  callback, useCapture);
     };
 
+    /**
+     *
+     * @param id
+     * @param callback
+     * @param useCapture
+     */
+    linker.clickRemove = function(id, callback, useCapture) {
+        var elem = linker.get(id, true);
+        if(elem) {
+            for(var i = 0; i < elem.length; i ++){
+                elem[i].removeEventListener('click', callback, useCapture);
+            }
+        }
+    };
 
     /**
      *

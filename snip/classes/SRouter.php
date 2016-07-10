@@ -386,12 +386,29 @@ class SRouter
     }
 
     /**
+     * @param $name
+     * @param $args
+     * @return mixed
+     */
+    public function __call($name, $args)
+    {
+        if ($name == 'encodeLink') {
+            return call_user_func_array([$this,'encodeLink'], $args);
+        } else if ($name == 'decodeLink') {
+            return call_user_func([$this,'decodeLink'], $args[0]);
+        } else if ($name == 'isXMLHTTPRequest') {
+            return call_user_func([$this,'isXMLHTTPRequest']);
+        }
+    }
+
+
+    /**
      * Кодирукт строку как часть URL
      * @param $link
      * @param bool|false $encodeSeparators
      * @return mixed|string
      */
-    public function encodeLink($link, $encodeSeparators = false)
+    static public function encodeLink($link, $encodeSeparators = false)
     {
         if($encodeSeparators)
             return urlencode($link);
@@ -404,7 +421,7 @@ class SRouter
      * @param $link
      * @return string
      */
-    public function decodeLink($link)
+    static public function decodeLink($link)
     {
         return urldecode($link);
     }
@@ -414,7 +431,7 @@ class SRouter
      *
      * @return bool
      */
-    public function isXMLHTTPRequest() {
+    static public function isXMLHTTPRequest() {
         return (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) &&
             strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) ==
             'xmlhttprequest') || isset($_GET['ajax']);

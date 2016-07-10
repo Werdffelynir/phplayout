@@ -1,7 +1,17 @@
 <?php
+/**
+ * @type SLayout $this
+ * @type string $url
+ * @type array $categories
+ */
 
+
+$select_relation = $this->render('part.select_relation.php');
 
 ?>
+
+
+
 
 <div class="loader_content">
     <span><i class="icon-spin2 animate-spin"></i> In progress ... </span>
@@ -34,32 +44,40 @@
 
                 <div id="deeps">
 
-                    <span class="linker" data-id="item-deep" data-deep="1"> Category </span>
-                    <span class="linker" data-id="item-deep" data-deep="2"> SubCategory </span>
-                    <span class="linker active" data-id="item-deep" data-deep="3"> Record </span>
+                    <div class="deep_items">
+                        <span class="linker" data-id="item-deep" data-deep="1"> Category </span>
+                        <span class="linker" data-id="item-deep" data-deep="2"> SubCategory </span>
+                        <span class="linker" data-id="item-deep" data-deep="3"> Record </span>
+                    </div>
 
                     <input hidden="hidden" type="radio" name="deep" value="1">
                     <input hidden="hidden" type="radio" name="deep" value="2">
-                    <input hidden="hidden" type="radio" name="deep" value="3" checked>
+                    <input hidden="hidden" type="radio" name="deep" value="3">
 
                 </div>
 
-                <div id="relations">
 
-                    <span class="relation">
-                        <span class="icon_btn"><i class="icon-cancel linker" data-id="relation-remove"></i></span>
-                        <span>PHP</span> > <span>File Operation</span>
-                    </span>
 
-                    <span class="relation">
-                        <span class="icon_btn"><i class="icon-plus linker" data-id="relation-add"></i></span>
-                        <span>Add new relation</span>
-                    </span>
+                <!--              <div class="relations">
 
-                </div>
+              <!--
+                                  <span class="relation">
+                                      <span class="icon_btn"><i class="icon-cancel linker" data-id="relation-remove"></i></span>
+                                      <span>PHP</span> > <span>File Operation</span>
+                                  </span>
 
+                                  <span class="relation">
+                                      <span class="icon_btn"><i class="icon-plus linker" data-id="relation-add"></i></span>
+                                      <span>Add new relation</span>
+                                  </span>
+
+                </div>  -->
+                <?php echo $select_relation; ?>
+                <div id="form_error"></div>
             </div>
         </div>
+
+
 
         <label for="ef_title"> <input id="ef_title" type="text" name="title" value="" placeholder="Title"> </label>
 

@@ -5,31 +5,35 @@
     /**
      *
      * @param selector
+     * @param from
      * @returns {*}
      */
-    var dom = function(selector){
+    var dom = function(selector, from){
 
-        if (!(this instanceof Dom)) return new Dom(selector);
+        if (!(this instanceof Dom)) return new Dom(selector, from);
 
-        if(selector === 'body' && document.body){
+        if (from) {
+            this.query(selector, from);
+
+        } else if (selector === 'body' && document.body) {
             this._elementsOptions('body', document.body);
 
         }
-        else if(selector === 'head' && document.head){
+        else if (selector === 'head' && document.head) {
             this._elementsOptions('head', document.head);
 
         }
-        else if(typeof selector === 'string'){
+        else if (typeof selector === 'string') {
             this.query(selector);
 
-        }else if(typeof selector === 'object' && (selector instanceof HTMLCollection || selector instanceof NodeList)){
+        } else if (typeof selector === 'object' && (selector instanceof HTMLCollection || selector instanceof NodeList)) {
             this._elementsOptions(null, selector);
 
         }
-        else if(typeof selector === 'object' && selector.nodeType === Node.ELEMENT_NODE){
+        else if (typeof selector === 'object' && selector.nodeType === Node.ELEMENT_NODE) {
             this._elementsOptions(null, selector);
 
-        }else
+        } else
             return this;
     };
 
@@ -234,8 +238,6 @@
                 });
             }catch(e){}
         }
-
-
         return this;
     };
 
@@ -250,8 +252,6 @@
                 });
             }catch(e){}
         }
-
-
         return this;
     };
 
@@ -319,9 +319,17 @@
      * @returns {*}
      */
     proto.query = function (selector, from){
-        from = (from && from.nodeType === Node.ELEMENT_NODE) ? from : window.document;
+
+        if (typeof from === 'string')
+            from = window.document.querySelector(from);
+
+        from = (from && from.nodeType === Node.ELEMENT_NODE)
+            ? from
+            : window.document;
+
         var find = from.querySelectorAll(selector),
             elem = (find) ? [].slice.call(find) : [];
+
         this._elementsOptions(selector, elem);
         return elem;
     };
@@ -346,13 +354,6 @@
         return this;
     };
 
-    proto.html2node = function(string) {
-        var i, f = document.createDocumentFragment(), c = document.createElement("div");
-        c.innerHTML = string;
-        while( i = c.firstChild ) f.appendChild(i);
-        return f.childNodes.length === 1 ? f.firstChild : f;
-    };
-
     proto.append = function(elements){
         var fragment = document.createDocumentFragment();
         if(Array.isArray(elements)) {
@@ -360,14 +361,14 @@
                 if(typeof item === 'object' && item.nodeType === Node.ELEMENT_NODE)
                     fragment.appendChild(item);
                 else if (typeof item === 'string')
-                    fragment.appendChild(proto.html2node(item));
+                    fragment.appendChild(dom.html2node(item));
             });
         }
         else if(typeof elements === 'object' && elements.nodeType === Node.ELEMENT_NODE){
             fragment.appendChild(elements);
         }
         else if(typeof elements === 'string'){
-            fragment.appendChild(proto.html2node(elements));
+            fragment.appendChild(dom.html2node(elements));
         }
 
         this.elements.map(function(elem){
@@ -378,6 +379,47 @@
 
     proto.toString = function (){
         return "Dom"
+    };
+
+    /**
+     *
+     * @param className
+     * @returns {proto}
+     */
+    proto.addClass = function (className){
+        if(this.elements.length == 0) return;
+        this.elements.map(function(elem, index){
+            elem.classList.add(className);
+        });
+        return this;
+    };
+
+    /**
+     *
+     * @param className
+     * @returns {proto}
+     */
+    proto.removeClass = function (className){
+        if(this.elements.length == 0) return;
+        this.elements.map(function(elem, index){
+            elem.classList.contains(className)
+                ? elem.classList.remove(className)
+                :'';
+        });
+        return this;
+    };
+
+
+    /**
+     *
+     * @param string
+     * @returns {*}
+     */
+    dom.html2node = function(string) {
+        var i, f = document.createDocumentFragment(), c = document.createElement("div");
+        c.innerHTML = string;
+        while( i = c.firstChild ) f.appendChild(i);
+        return f.childNodes.length === 1 ? f.firstChild : f;
     };
 
 
@@ -463,6 +505,7 @@
     dom.isLoaded = function(){
         return proto.query('body').length > 0;
     };
+
 
     dom.prototype = proto;
     dom.prototype.constructor = dom;

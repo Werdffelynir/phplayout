@@ -34,11 +34,14 @@ $Controller = new Main($params, $SRouter, $SLayout, $SPDO);
 $SRouter->get('/', [$Controller,'actionIndex']);
 $SRouter->get('/c/:p!', [$Controller,'actionCategory']);
 $SRouter->get('/editor/:p?', [$Controller,'actionEditor']);
-
+$SRouter->post('/api', [$Controller,'actionApi']);
 
 
 
 /*
+args.key = key
+args.token = App.token
+
 $SRouter->post('/api/insert', [$Controller,'actionInsert']);
 $SRouter->post('/api/update', [$Controller,'actionUpdate']);
 $SRouter->post('/api/delete', [$Controller,'actionDelete']);

@@ -2,7 +2,7 @@
 window.App = new NamespaceApplication({
     path: '/',
     debug: true,
-    token: null,
+    token: 'secret_token_key',
     constructsType: false
 });
 
@@ -21,10 +21,12 @@ App.require('libs',
 App.require('dependence',
     [
         // Common tools
+        App.path + 'public/js.app/api.js',
         App.path + 'public/js.app/tool.js',
 
         // Actions
         App.path + 'public/js.app/action/editor.js',
+        App.path + 'public/js.app/action/relations.js',
 
          // Controllers
         App.path + 'public/js.app/controller/page.js'

@@ -188,7 +188,7 @@ a.btn_inline_orange, .btn_inline_orange a{
     border:none;
     padding: 3px;
     width: 98%;
-    height: 50px;
+    height: 62px;
 }
 
 
@@ -232,7 +232,7 @@ span.icon_btn:hover{
 #deeps {
     margin: 5px 0;
 }
-#deeps > span {
+.deep_items span {
     background-color: #ddd;
     color: #444444;
     padding: 3px 5px;
@@ -240,7 +240,7 @@ span.icon_btn:hover{
     border-radius: 15px;
     cursor: pointer;
 }
-#deeps > span:hover, #deeps > span.active {
+.deep_items > span:hover, .deep_items > span.active_deep {
     background-color: #444444;
     color: #fdfdfd;
 }
@@ -327,13 +327,48 @@ form[name=search] i {
     font-weight: bold;
 }
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+#relations{
+    /*position: absolute;*/
+    /*width: 800px;*/
+    /*background-color: rgb(77, 71, 83);*/
+}
+
+.relations .select_relations{}
+
+.select_relations>div{
+    background-color: #453c4d;
+    vertical-align: top;
+}
+.select_relations>div>ul{
+    max-height: 110px;
+    overflow-y: auto;
+}
+.select_relations>div>ul>li{
+    border-left: 8px solid #1f1a22;
+    border-bottom: 1px solid #1f1a22;
+    cursor: pointer;
+    color: #dec0f8;
+    font-size: 11px;
+}
+.select_relations>div>ul>li:hover, .selected_relation{
+    background-color: #1f1a22;
+    color: #e5921a !important;
+
+ }
 
 
 
 
 
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
-
+#form_error {
+    display: none;
+    color: white;
+    background-color: rgb(192, 0, 0);
+    padding: 5px;
+    margin-right: 10px;
+    font-size: 12px;
+}
 
 
 
