@@ -175,6 +175,18 @@ class Main
 
 
 
+    private function api_getsubcategories($data)
+    {
+        $categories = $this->modelItem->getCategories();
+        $responseData = [
+            'data' => $data
+        ];
+
+        return $responseData;
+    }
+
+
+
 
 
 
