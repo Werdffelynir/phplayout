@@ -7,7 +7,8 @@ if(App.namespace){App.namespace('Action.Relations', function(App) {
      * @namespace App.Action.Relations
      */
     var _ = {
-        node:{}
+        node:{},
+        injectData:{}
     };
 
 
@@ -25,7 +26,7 @@ if(App.namespace){App.namespace('Action.Relations', function(App) {
      * @param injectData
      */
     _.open = function(injectData) {
-
+        _.injectData = injectData;
         // Elements nodes
         _.node['rel_first'] = App.query('#relations_first');
         _.node['rel_second'] = App.query('#relations_second');
@@ -34,13 +35,19 @@ if(App.namespace){App.namespace('Action.Relations', function(App) {
         if(injectData['categories']) {
             App.inject('#relations_first', _.createList(injectData['categories']));
         }
-        if(injectData['subcategories']) {
 
-        }
+        if (_.node['rel_second'].classList.contains('width_50'))
+            Dom(_.node['rel_second']).removeClass('width_50');
 
         Dom('li', _.node['rel_window']).removeClass('selected_relation');
     };
 
+    _.addSubcategories = function (list) {
+
+        if(injectData['subcategories']) {
+            App.inject('#relations_first', _.createList(list));
+        }
+    };
 
     /**
      * @namespace App.Action.Relations.close
@@ -72,7 +79,16 @@ if(App.namespace){App.namespace('Action.Relations', function(App) {
 
             Dom('li', target.parentNode).removeClass('selected_relation');
             Dom(target).addClass('selected_relation');
-            Dom(_.node['rel_second']).addClass('width_50');
+
+            if(_.injectData['deep'] == 3) {
+                Dom(_.node['rel_second']).addClass('width_50');
+                App.Api.request('getsubcategories', function (data) {
+                    
+                } , {
+                    
+                } )
+            }
+
             console.log(link);
         });
 

@@ -39,17 +39,10 @@ if(App.namespace){App.namespace('Action.Editor', function(App) {
             Dom('input[name="deep"][value="'+deep+'"]').one(function(elem){elem.checked = true});
             Dom(target).addClass('active_deep');
 
-            if(deep > 1) {
-                App.Api.request('getcategories', {}, function (data) {
-                    App.Action.Relations.open({categories:data['categories'],deep:deep});
-                });
-            }
-            /*if(deep == 3) {
-             console.log('getcategories>>>', data);
-                App.Api.request('getwithsubcategories', {bycategory:''}, function (data) {
-                    App.Action.Relations.open({categories:data['subcategories']});
-                });
-            }*/
+            if (deep > 1)
+                App.Api.request('getcategories', function (data) {
+                    App.Action.Relations.open({categories: data['categories'], deep: deep});
+                }, {});
         });
 
 
