@@ -26,6 +26,7 @@ if(App.namespace){App.namespace('Action.Relations', function(App) {
      * @param injectData
      */
     _.open = function(injectData) {
+
         _.injectData = injectData;
         // Elements nodes
         _.node['rel_first'] = App.query('#relations_first');
@@ -80,16 +81,15 @@ if(App.namespace){App.namespace('Action.Relations', function(App) {
             Dom('li', target.parentNode).removeClass('selected_relation');
             Dom(target).addClass('selected_relation');
 
-            if(_.injectData['deep'] == 3) {
+            if(_.injectData['deep'] > 2) {
                 Dom(_.node['rel_second']).addClass('width_50');
-                App.Api.request('getsubcategories', function (data) {
-                    
-                } , {
-                    
-                } )
             }
 
-            console.log(link);
+            App.Api.request('getsubcategories', function (data) {
+                console.log(data);
+            } , {link:link} );
+
+            //console.log(link);
         });
 
         Linker.click('relations_second', function(event){

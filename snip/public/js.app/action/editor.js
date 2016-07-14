@@ -32,6 +32,7 @@ if(App.namespace){App.namespace('Action.Editor', function(App) {
         });
 
         Linker.click('item-deep', function (event) {
+
             var target = event.target;
             var deep = target.getAttribute('data-deep');
 
@@ -39,10 +40,13 @@ if(App.namespace){App.namespace('Action.Editor', function(App) {
             Dom('input[name="deep"][value="'+deep+'"]').one(function(elem){elem.checked = true});
             Dom(target).addClass('active_deep');
 
+
             if (deep > 1)
                 App.Api.request('getcategories', function (data) {
                     App.Action.Relations.open({categories: data['categories'], deep: deep});
                 }, {});
+            else
+                App.Action.Relations.close();
         });
 
 
@@ -75,9 +79,9 @@ Linker.click('relation-remove', function (event) {
 
         if (errors == '') {
             _.node['form_error'].style.display = 'none';
-            App.Api.request('save', formData, function (data) {
+            App.Api.request('save', function (data) {
                 console.log('request success:', data);
-            });
+            }, formData);
         } else {
             _.node['form_error'].style.display = 'block';
             App.inject(_.node['form_error'], errors);
