@@ -71,7 +71,7 @@ Linker.click('relation-remove', function (event) {
     //Object { link: "", tags: "", keyword: "", description: "", deep: "3", title: "", content: "" }
     _.saveItem = function(){
 
-        var sendData = {item:null,relation:null},
+        var sendData = {item:null,relation:[]},
             errors = '',
             require = ['link', 'deep', 'title', 'content'],
             formData = Util.formData(_.node['form'], true);
@@ -82,12 +82,34 @@ Linker.click('relation-remove', function (event) {
                 errors += '<p>Field <strong>' + field + '</strong> can`t be empty!</p>';
         });
 
+        // relations
+        var relIter, relationsItems = App.queryAll('.relation_item', '#relation_items');
+
+        if(relationsItems) {
+            for(relIter = 0; relIter < relationsItems.length; relIter++) {
+                var id_cat = relationsItems[relIter].getAttribute('data-cat');
+                var id_subcat = relationsItems[relIter].getAttribute('data-subcat');
+                var relation = {parent:null, child:null, type:null};
+                if(id_cat && id_subcat) {
+                    relation.type = 'item';
+                    relation.parent = id_subcat;
+                    relation.child = 'this';
+                }else{
+                    relation.type = 'subcat';
+                    relation.parent = id_cat;
+                    relation.child = 'this';
+                }
+                sendData.relation.push(relation);
+            }
+        }
 
 
         if (errors == '') {
+
             _.node['form_error'].style.display = 'none';
 
             sendData.item = JSON.stringify(formData);
+            sendData.relation = JSON.stringify(sendData.relation);
 
             if(formData.deep == 1) {
                 App.Api.request('save', function (response) {
@@ -98,7 +120,7 @@ Linker.click('relation-remove', function (event) {
                     }
 
                     // Object { data: Object, operation: "insert", operation_result: "26", itemData: Object }
-                    console.log('request success:', response);
+                    console.log('save request success:', response);
 
                 }, sendData );
             }

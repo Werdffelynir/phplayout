@@ -148,13 +148,14 @@ if(App.namespace){App.namespace('Action.Relations', function(App) {
      * @returns {Element}
      */
     _.createItemElement = function(cat, subcat, cat_id, subcat_id) {
+
         subcat = subcat || null;
         cat_id = cat_id || null;
         subcat_id = subcat_id || null;
 
         var
-            item = Util.createElement('div', {'class': 'relation_item tbl'}),
-            icon = Util.createElement('i', {'class': 'icon-cancel', 'data-cat': cat_id, 'data-subcat': subcat_id}),
+            item = Util.createElement('div', {'class': 'relation_item tbl', 'data-cat': cat_id, 'data-subcat': subcat_id}),
+            icon = Util.createElement('i', {'class': 'icon-cancel'}),
             cell_ico = Util.createElement('div', {'class': 'tbl_cell'}),
             cell_desc = Util.createElement('div', {'class': 'tbl_cell'}, cat + (subcat ? ' > ' + subcat : '') );
 
@@ -168,14 +169,10 @@ if(App.namespace){App.namespace('Action.Relations', function(App) {
 
     _.onRemoveItemElement = function(event) {
         var item = null, target = event.target;
-        target.removeEventListener('click', _.onRemoveItemElement, false);
+        //target.removeEventListener('click', _.onRemoveItemElement, false);
         item = App.queryUp('.relation_item', target);
         item.parentNode.removeChild(item)
     };
-
-
-
-
 
 
     return _;

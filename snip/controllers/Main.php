@@ -148,10 +148,17 @@ class Main
         }
     }
 
+    private function api_save_relations($relations)
+    {
+        $itemData['deep'] = trim($item['deep']);
+        $itemData['link'] = trim($item['link']);
+
+        
+    }
 
     private function api_save($data)
     {
-        $item = null;
+        $item = $relation = null;
         $resp = [
             'data' => $data,
             'operation' => '',
@@ -164,16 +171,17 @@ class Main
 
             $relation = !empty($data['relation'])
                 ? json_decode($data['relation'], true)
-                : false;
+                : null;
 
         }catch (Exception $e) {
-            $resp['operation_error'] = 'POST data not parse in type JSON. Exception: ' . $e->getMessage();
+            $resp['operation_error'] = 'Parse data JSON catch exception: ' . $e->getMessage();
         }
 
 
-//        $resp['item'] = $item;
-//        $resp['relation'] = $relation;
-//        return $resp;
+        $resp['item'] = $item;
+        $resp['relation'] = $relation;
+        return $resp;
+
         if($item) {
 
             $itemData['deep'] = trim($item['deep']);
