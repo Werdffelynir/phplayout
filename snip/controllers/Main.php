@@ -148,39 +148,39 @@ class Main
         }
     }
 
-    private function api_save_relations($relations)
+    private function api_save_relations(array $relations)
     {
-        $itemData['deep'] = trim($item['deep']);
-        $itemData['link'] = trim($item['link']);
-
-        
+        $relData['patent'] = $relations['patent'];
+        $relData['child'] = $relations['child'];
     }
 
     private function api_save($data)
     {
-        $item = $relation = null;
+        $item = $current_id = $relations = null;
         $resp = [
-            'data' => $data,
-            'operation' => '',
-            'operation_result' => false,
+            //'data' => $data,
+            'error' => null,
+            'error_info' => null,
+            'mode' => '',
+            'res_item' => null,
+            'res_relations' => [],
         ];
 
         try{
 
             $item = json_decode($data['item'], true) ;
 
-            $relation = !empty($data['relation'])
+            $current_id = isset($item['id'])
+                ? $item['id']
+                : null;
+
+            $relations = !empty($data['relation'])
                 ? json_decode($data['relation'], true)
                 : null;
 
         }catch (Exception $e) {
             $resp['operation_error'] = 'Parse data JSON catch exception: ' . $e->getMessage();
         }
-
-
-        $resp['item'] = $item;
-        $resp['relation'] = $relation;
-        return $resp;
 
         if($item) {
 
@@ -193,24 +193,35 @@ class Main
             $itemData['description'] = trim($item['description']);
             $itemData['tags'] = trim($item['tags']);
 
-            $resp['itemData'] = $itemData;
-
             if (empty($data['id'])) {
 
-                $resp['operation'] = 'insert';
+                $resp['mode'] = 'insert';
                 $result = $this->db->insert('item', $itemData);
 
-                if($result) $resp['operation_result'] = $this->db->lastInsertId();
-                else $resp['operation_error'] = $this->db->getError('error');
+                if(!$result) {
+                    $resp['error'] = true;
+                    $resp['error_info'] = $this->db->getError('error');
+                }
+                else $resp['res_item'] = $current_id = $this->db->lastInsertId();
 
             } else {
-                $resp['operation'] = 'update';
+                $resp['mode'] = 'update';
                 $result = $this->db->update('item', $itemData, 'id = ?', (int) $data['id']);
-                $resp['operation_result'] = $result ? $result : $this->db->errorInfo();
+
+                if(!$result) {
+                    $resp['error'] = true;
+                    $resp['error_info'] = $this->db->getError('error');
+                }
+                else $resp['res_item'] = $data['id'];
             }
         }
 
-
+        if($relations && $current_id) {
+            foreach ($relations as $rel) {
+                $result = $this->modelRelation->insertIfNotExist((int) $rel['parent'], (int) $current_id);
+                $resp['res_relations'][] = $result;
+            }
+        }
 
         return $resp;
     }

@@ -16,6 +16,9 @@ if(App.namespace){App.namespace('Api', function(App) {
 
         Aj.post('/api', args, function (status, response) {
 
+            if(!!api.log)
+                console.log('### Api.request: status ', status, response);
+
             try {
                 var dataResponse = JSON.parse(response);
                 App.token = dataResponse.token;
@@ -29,6 +32,12 @@ if(App.namespace){App.namespace('Api', function(App) {
 
         });
     };
+
+    /**
+     * @namespace App.Api.log
+     * @type {boolean}
+     */
+    api.log = false;
 
     return api;
 })}

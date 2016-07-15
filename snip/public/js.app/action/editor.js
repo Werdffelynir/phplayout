@@ -74,6 +74,7 @@ Linker.click('relation-remove', function (event) {
         var sendData = {item:null,relation:[]},
             errors = '',
             require = ['link', 'deep', 'title', 'content'],
+            formError = _.node['form_error'],
             formData = Util.formData(_.node['form'], true);
 
 
@@ -83,51 +84,43 @@ Linker.click('relation-remove', function (event) {
         });
 
         // relations
-        var relIter, relationsItems = App.queryAll('.relation_item', '#relation_items');
-
+        var relationsItems = App.queryAll('.relation_item', '#relation_items');
         if(relationsItems) {
-            for(relIter = 0; relIter < relationsItems.length; relIter++) {
-                var id_cat = relationsItems[relIter].getAttribute('data-cat');
-                var id_subcat = relationsItems[relIter].getAttribute('data-subcat');
-                var relation = {parent:null, child:null, type:null};
-                if(id_cat && id_subcat) {
-                    relation.type = 'item';
-                    relation.parent = id_subcat;
-                    relation.child = 'this';
-                }else{
-                    relation.type = 'subcat';
-                    relation.parent = id_cat;
-                    relation.child = 'this';
-                }
+            relationsItems.map(function(elem){
+                var cat = elem.getAttribute('data-cat'),
+                    subcat = elem.getAttribute('data-subcat'),
+                    relation = {
+                        parent: (subcat > 0) ? parseInt(subcat) : cat,
+                        child: 'this',
+                        type: (subcat > 0) ? 'item' : 'subcat'
+                    };
                 sendData.relation.push(relation);
-            }
+            });
         }
-
 
         if (errors == '') {
 
-            _.node['form_error'].style.display = 'none';
+            formError.style.display = 'none';
 
             sendData.item = JSON.stringify(formData);
             sendData.relation = JSON.stringify(sendData.relation);
 
-            if(formData.deep == 1) {
-                App.Api.request('save', function (response) {
+            // if(formData.deep == 1) { }
+            // Object { data: Object, operation: "insert", operation_result: "26", itemData: Object }
+            App.Api.request('save', function (response) {
+                console.log('### save:', response);
 
-                    if(response['operation_error']) {
-                        _.node['form_error'].style.display = 'block';
-                        App.inject(_.node['form_error'], response['operation_error']);
-                    }
+                if(response['operation_error']) {
+                    formError.style.display = 'block';
+                    App.inject(formError, response['operation_error']);
+                }
 
-                    // Object { data: Object, operation: "insert", operation_result: "26", itemData: Object }
-                    console.log('save request success:', response);
 
-                }, sendData );
-            }
+            }, sendData );
 
         } else {
-            _.node['form_error'].style.display = 'block';
-            App.inject(_.node['form_error'], errors);
+            formError.style.display = 'block';
+            App.inject(formError, errors);
         }
     };
 
