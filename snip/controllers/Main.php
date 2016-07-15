@@ -43,6 +43,8 @@ class Main
      */
     public function __construct($params, $SRouter, $SLayout, $SPDO)
     {
+        //$this->dbFilePermissions($params);
+
         $this->params = $params;
         $this->Router = $SRouter;
         $this->Layout = $SLayout;
@@ -52,6 +54,18 @@ class Main
         $this->modelRelation = new Relation($this->db);
 
         $this->commonLayoutVariables();
+    }
+
+    private function dbFilePermissions($params)
+    {
+        $path = implode('',array_slice(explode(':', $params['db']['dsn']), 1));
+        if(is_file($path)) {
+            $permission = substr(sprintf('%o', fileperms($path)), -4);
+            if(is_numeric($permission) && $permission != '0777') {
+                chmod($path, 0777);
+                chown($path, $params['filesystem_owner']);
+            }
+        }
     }
 
 
@@ -137,30 +151,60 @@ class Main
 
     private function api_save($data)
     {
-        $operation = 'insert';
-        $result = false;
-        $data['deep'] = trim($_POST['deep']);
-        $data['link'] = trim($_POST['link']);
-        $data['title'] = trim($_POST['title']);
-        $data['content'] = trim($_POST['content']);
-        $data['created'] = date('d.m.Y H:i:s');
-        $data['keyword'] = trim($_POST['keyword']);
-        $data['description'] = trim($_POST['description']);
-        $data['tags'] = trim($_POST['tags']);
+        $item = null;
+        $resp = [
+            'data' => $data,
+            'operation' => '',
+            'operation_result' => false,
+        ];
 
-        if (empty($data['id'])) {
-            $result = $this->db->insert('item', $data);
-        } else {
-            $operation = 'update';
-            $id = $data['id'];
-            unset($data['id']);
-            $result = $this->db->update('item', $data, 'id = ?', $id);
+        try{
+
+            $item = json_decode($data['item'], true) ;
+
+            $relation = !empty($data['relation'])
+                ? json_decode($data['relation'], true)
+                : false;
+
+        }catch (Exception $e) {
+            $resp['operation_error'] = 'POST data not parse in type JSON. Exception: ' . $e->getMessage();
         }
 
-        return [
-            'operation' => $operation,
-            'id' => $result,
-        ];
+
+//        $resp['item'] = $item;
+//        $resp['relation'] = $relation;
+//        return $resp;
+        if($item) {
+
+            $itemData['deep'] = trim($item['deep']);
+            $itemData['link'] = trim($item['link']);
+            $itemData['title'] = trim($item['title']);
+            $itemData['content'] = trim($item['content']);
+            $itemData['created'] = date('d.m.Y H:i:s');
+            $itemData['keyword'] = trim($item['keyword']);
+            $itemData['description'] = trim($item['description']);
+            $itemData['tags'] = trim($item['tags']);
+
+            $resp['itemData'] = $itemData;
+
+            if (empty($data['id'])) {
+
+                $resp['operation'] = 'insert';
+                $result = $this->db->insert('item', $itemData);
+
+                if($result) $resp['operation_result'] = $this->db->lastInsertId();
+                else $resp['operation_error'] = $this->db->getError('error');
+
+            } else {
+                $resp['operation'] = 'update';
+                $result = $this->db->update('item', $itemData, 'id = ?', (int) $data['id']);
+                $resp['operation_result'] = $result ? $result : $this->db->errorInfo();
+            }
+        }
+
+
+
+        return $resp;
     }
 
 

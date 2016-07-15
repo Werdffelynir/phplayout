@@ -23,6 +23,7 @@ App.require('dependence',
         // Common tools
         App.path + 'public/js.app/api.js',
         App.path + 'public/js.app/tool.js',
+        App.path + 'public/js.app/catch.js',
 
         // Actions
         App.path + 'public/js.app/action/editor.js',

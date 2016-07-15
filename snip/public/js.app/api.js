@@ -9,6 +9,7 @@ if(App.namespace){App.namespace('Api', function(App) {
      * @namespace App.Api.request
      */
     api.request = function (key, callback, args) {
+
         args = (args instanceof Object) ? args : {};
         args.key = key;
         args.token = App.token;

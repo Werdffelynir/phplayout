@@ -327,14 +327,43 @@ form[name=search] i {
     font-weight: bold;
 }
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
-#relations{
-    /*position: absolute;*/
-    /*width: 800px;*/
-    /*background-color: rgb(77, 71, 83);*/
+#relation_items{
 }
 
-.relations .select_relations{}
 
+.relation_item{
+    width: auto;
+/*    background-color: #ddd;
+    border-radius: 5px;
+    padding: 0 5px;*/
+    font-weight: 600;
+    font-size: 12px;
+}
+
+.relation_item>.tbl_cell{
+    vertical-align: top;
+    padding: 3px 0;
+}
+
+.relation_item>.tbl_cell:nth-child(n+2){ padding: 3px 3px; }
+
+.relation_item .icon-cancel{
+    display: block;
+    width: 15px;
+    height: 15px;
+    border-radius: 10px;
+    color: #444444;
+    cursor: pointer;
+}
+
+.relation_item .icon-cancel:hover{
+    /*background-color: #1f1a22;*/
+    color: #e5921a;
+}
+
+
+
+#relations{}
 .select_relations>div{
     background-color: #453c4d;
     vertical-align: top;
@@ -354,7 +383,7 @@ form[name=search] i {
     background-color: #1f1a22;
     color: #e5921a !important;
 
- }
+}
 
 
 

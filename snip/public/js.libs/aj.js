@@ -47,11 +47,19 @@
     util.encode = function(object){
         if(typeof object === 'string') return object;
         if(typeof object !== 'object') return '';
-        var key, convert = [];
-        for(key in object)
-            convert.push(key+'='+encodeURIComponent(object[key]));
+        var key,
+            convert = [];
+
+        for(key in object) {
+            var fieldValue = object[key];
+            if(typeof fieldValue === 'object')
+                fieldValue = util.encode(fieldValue);
+            convert.push(key+'=' + encodeURIComponent(fieldValue));
+        }
+
         return convert.join('&');
     };
+
     util.decode = function(string){
         return util.parse(string);
     };

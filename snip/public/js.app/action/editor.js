@@ -4,6 +4,7 @@ if(App.namespace){App.namespace('Action.Editor', function(App) {
      * @namespace App.Action.Editor
      */
     var _ = {
+        item:{id:0},
         node:{}
     };
 
@@ -40,9 +41,11 @@ if(App.namespace){App.namespace('Action.Editor', function(App) {
             Dom('input[name="deep"][value="'+deep+'"]').one(function(elem){elem.checked = true});
             Dom(target).addClass('active_deep');
 
-
             if (deep > 1)
                 App.Api.request('getcategories', function (data) {
+
+                    App.Catch.put('categories', data['categories']);
+
                     App.Action.Relations.open({categories: data['categories'], deep: deep});
                 }, {});
             else
@@ -68,26 +71,42 @@ Linker.click('relation-remove', function (event) {
     //Object { link: "", tags: "", keyword: "", description: "", deep: "3", title: "", content: "" }
     _.saveItem = function(){
 
-        var errors = '',
+        var sendData = {item:null,relation:null},
+            errors = '',
             require = ['link', 'deep', 'title', 'content'],
             formData = Util.formData(_.node['form'], true);
+
 
         require.map(function (field) {
             if (!formData[field] || formData[field].length < 0)
                 errors += '<p>Field <strong>' + field + '</strong> can`t be empty!</p>';
         });
 
+
+
         if (errors == '') {
             _.node['form_error'].style.display = 'none';
-            App.Api.request('save', function (data) {
-                console.log('request success:', data);
-            }, formData);
+
+            sendData.item = JSON.stringify(formData);
+
+            if(formData.deep == 1) {
+                App.Api.request('save', function (response) {
+
+                    if(response['operation_error']) {
+                        _.node['form_error'].style.display = 'block';
+                        App.inject(_.node['form_error'], response['operation_error']);
+                    }
+
+                    // Object { data: Object, operation: "insert", operation_result: "26", itemData: Object }
+                    console.log('request success:', response);
+
+                }, sendData );
+            }
+
         } else {
             _.node['form_error'].style.display = 'block';
             App.inject(_.node['form_error'], errors);
         }
-
-
     };
 
     _.saveRemove = function(){};

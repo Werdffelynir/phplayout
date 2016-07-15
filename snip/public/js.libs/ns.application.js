@@ -28,6 +28,7 @@
         this.inject = app.inject;
         this.query = app.query;
         this.queryAll = app.queryAll;
+        this.queryUp = app.queryUp;
         this.each = app.each;
 
     };
@@ -306,6 +307,32 @@
         return elems;
     };
 
+    /**
+     * Query DOM Element by selector to up in tree
+     * @param selector
+     * @param from
+     * @param loops
+     * @returns {*}
+     */
+    app.queryUp = function(selector, from, loops) {
+        var item = null;
+        if(loops === undefined) loops = 20;
+        if(typeof from === 'string') from = document.querySelector(from);
+        if(from.nodeType !== Node.ELEMENT_NODE) {
+            from = document;
+            loops = 0;
+        }
+
+        if(typeof selector === 'string')
+            item = from.querySelector(selector);
+
+        if(!item && loops > 0) {
+            if(from.parentNode)
+                return app.queryUp(selector, from.parentNode, --loops);
+        }
+
+        return item;
+    };
 
     /**
      *
