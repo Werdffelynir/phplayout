@@ -20,13 +20,17 @@ if(App.namespace){App.namespace('Api', function(App) {
                 console.log('### Api.request: status ', status, response);
 
             try {
-                var dataResponse = JSON.parse(response);
-                App.token = dataResponse.token;
-                delete dataResponse.token;
+                var resData = JSON.parse(response);
+                console.log('JSON.parse: ', resData);
 
-                callback.call(null, dataResponse.data);
-            } catch (e) {
-                console.error('Api Request catch error! Status: [' + status + '] Response: [' + response + ']');
+                App.token = resData.token;
+                delete resData.token;
+
+                callback.call(null, resData.data);
+            } catch (error) {
+                // console.log('Exception: ', error);
+                // console.error('Api Request catch error! Status: ' + status);
+                // console.error('Api Request catch error! Response: ' + response);
             }
 
 

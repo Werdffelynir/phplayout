@@ -43,10 +43,8 @@ if(App.namespace){App.namespace('Action.Editor', function(App) {
 
             if (deep > 1)
                 App.Api.request('getcategories', function (data) {
-
                     App.Catch.put('categories', data['categories']);
-
-                    App.Action.Relations.open({categories: data['categories'], deep: deep});
+                    App.Action.Relations.open(data['categories'], deep);
                 }, {});
             else
                 App.Action.Relations.close();
@@ -84,19 +82,13 @@ Linker.click('relation-remove', function (event) {
         });
 
         // relations
-        var relationsItems = App.queryAll('.relation_item', '#relation_items');
-        if(relationsItems) {
-            relationsItems.map(function(elem){
-                var cat = elem.getAttribute('data-cat'),
-                    subcat = elem.getAttribute('data-subcat'),
-                    relation = {
-                        parent: (subcat > 0) ? parseInt(subcat) : cat,
-                        child: 'this',
-                        type: (subcat > 0) ? 'item' : 'subcat'
-                    };
-                sendData.relation.push(relation);
-            });
-        }
+        var ri, relitem = App.queryAll('.relation_item', '#relation_items');
+
+        if(relitem)
+            for(ri = 0; ri < relitem.length; ri++)
+                sendData.relation.push(relitem[ri].getAttribute('data-id'));
+
+        console.log(sendData.relation);
 
         if (errors == '') {
 
@@ -110,9 +102,9 @@ Linker.click('relation-remove', function (event) {
             App.Api.request('save', function (response) {
                 console.log('### save:', response);
 
-                if(response['operation_error']) {
+                if(response['error']) {
                     formError.style.display = 'block';
-                    App.inject(formError, response['operation_error']);
+                    App.inject(formError, response['error_info']);
                 }
 
 

@@ -22,7 +22,7 @@ switch
 index
 
 # use
+*.pdf
 tmp
 js/commercial
 lib/mpdf
-*.pdf

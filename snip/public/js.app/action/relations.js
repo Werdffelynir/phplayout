@@ -4,11 +4,13 @@
 if(App.namespace){App.namespace('Action.Relations', function(App) {
 
     /**
-     * @namespace App.Action.Relations
+     * @namespace App.Action.Relations _
      */
     var _ = {
-        node:{},
-        injectData:{}
+        node: {},
+        deep: null,
+        categories: null,
+        subcategories: null
     };
 
 
@@ -33,31 +35,38 @@ if(App.namespace){App.namespace('Action.Relations', function(App) {
 
     /**
      * @namespace App.Action.Relations.open
-     * @param injectData
+     * @param categories
+     * @param deep
      */
-    _.open = function(injectData) {
-
-        _.injectData = injectData;
+    _.open = function(categories, deep) {
+        _.categories = categories;
+        _.deep = deep;
 
         // Elements nodes
-        _.node['rel_first'] = App.query('#relations_first');
+        _.node['rel_first']  = App.query('#relations_first');
         _.node['rel_second'] = App.query('#relations_second');
         _.node['rel_window'].style.display = 'block';
 
-        if(injectData['categories']) {
-            App.inject('#relations_first', _.createList(injectData['categories']));
+        if (deep == 2) {
+            _.node['rel_second'].textContent = '';
+            Dom(_.node['rel_second']).removeClass('width_50');
         }
 
-        if (_.node['rel_second'].classList.contains('width_50'))
-            Dom(_.node['rel_second']).removeClass('width_50');
+        _.addCategories(_.categories);
 
         Dom('li', _.node['rel_window']).removeClass('selected_relation');
     };
 
-    _.addSubcategories = function (list) {
-
-        if(injectData['subcategories']) {
+    _.addCategories = function (list) {
+        if(typeof list === 'object') {
             App.inject('#relations_first', _.createList(list));
+        }
+    };
+
+    _.addSubcategories = function (list) {
+        Dom(_.node['rel_second']).addClass('width_50');
+        if(typeof list === 'object') {
+            App.inject('#relations_second', _.createList(list));
         }
     };
 
@@ -92,7 +101,8 @@ if(App.namespace){App.namespace('Action.Relations', function(App) {
         // Linker events
         Linker.refresh();
 
-        Linker.click('relations_first', function(event){
+
+        Linker.click('relations_first', function(event) {
             var target = event.target;
             var id = target.getAttribute('data-id'),
                 link = target.getAttribute('data-link');
@@ -106,25 +116,29 @@ if(App.namespace){App.namespace('Action.Relations', function(App) {
                 data: App.Catch.get('categories').filter(function(a){return a.id == id})[0]
             });
 
-            if(_.injectData['deep'] > 2) {
-                Dom(_.node['rel_second']).addClass('width_50');
+            if(_.deep > 2) {
+                App.Api.request('getsubcategories', function (data) {
+                    _.subcategories = data['subcategories'];
+                    _.addSubcategories(data['subcategories'])
+                } , {link:link} );
             }
-
-
-            //console.log(link);
-            App.Api.request('getsubcategories', function (data) {
-                console.log('getsubcategories...', data);
-            } , {link:link} );
-
         });
+
 
         Linker.click('relations_second', function(event){
             var target = event.target;
-            var link = target.getAttribute('data-link');
+            var id = target.getAttribute('data-id'),
+                link = target.getAttribute('data-link');
 
             Dom('li', target.parentNode).removeClass('selected_relation');
             Dom(target).addClass('selected_relation');
-            console.log(link);
+
+            App.Catch.put('relation_second', {
+                target : event.target,
+                id : id,
+                data: _.subcategories.filter(function(a){return a.id == id})[0]
+            });
+
         });
 
         Linker.click('relations_btn', function(event) {
@@ -133,8 +147,17 @@ if(App.namespace){App.namespace('Action.Relations', function(App) {
 
             if(link == 'cancel') _.close();
             if(link == 'confirm') {
-                var parent = App.Catch.get('relation_first')['data'];
-                _.node['rel_items'].appendChild(_.createItemElement(parent.title, false, parent.id));
+
+                var relfirst = App.Catch.get('relation_first')['data'];
+
+                if(_.deep == 2) {
+                    _.node['rel_items'].appendChild(_.createItemElement(relfirst.title, false, relfirst.id));
+                }
+                else if(_.deep == 3) {
+                    var relsecond = App.Catch.get('relation_second')['data'];
+                    _.node['rel_items'].appendChild(_.createItemElement(relfirst.title, relsecond.title, relfirst.id, relsecond.id));
+
+                }
                 _.close();
             }
         });
@@ -145,19 +168,20 @@ if(App.namespace){App.namespace('Action.Relations', function(App) {
 
     /**
      * @namespace App.Action.Relations.createItem
+     *
+     * @param desc
+     * @param id
      * @returns {Element}
      */
-    _.createItemElement = function(cat, subcat, cat_id, subcat_id) {
+    _.createItemElement = function(desc, id) {
 
-        subcat = subcat || null;
-        cat_id = cat_id || null;
-        subcat_id = subcat_id || null;
+        id = id || 0;
 
         var
-            item = Util.createElement('div', {'class': 'relation_item tbl', 'data-cat': cat_id, 'data-subcat': subcat_id}),
+            item = Util.createElement('div', {'class': 'relation_item tbl', 'data-id': id}),
             icon = Util.createElement('i', {'class': 'icon-cancel'}),
             cell_ico = Util.createElement('div', {'class': 'tbl_cell'}),
-            cell_desc = Util.createElement('div', {'class': 'tbl_cell'}, cat + (subcat ? ' > ' + subcat : '') );
+            cell_desc = Util.createElement('div', {'class': 'tbl_cell'}, desc);
 
         icon.addEventListener('click', _.onRemoveItemElement, false);
         cell_ico.appendChild(icon);
@@ -168,9 +192,13 @@ if(App.namespace){App.namespace('Action.Relations', function(App) {
 
 
     _.onRemoveItemElement = function(event) {
-        var item = null, target = event.target;
-        //target.removeEventListener('click', _.onRemoveItemElement, false);
-        item = App.queryUp('.relation_item', target);
+        var target = event.target,
+            item = target.parentNode.parentNode
+            ;
+
+        console.log(item);
+
+        target.removeEventListener('click', _.onRemoveItemElement, false);
         item.parentNode.removeChild(item)
     };
 

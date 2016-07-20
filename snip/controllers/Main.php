@@ -148,12 +148,12 @@ class Main
         }
     }
 
-    private function api_save_relations(array $relations)
-    {
-        $relData['patent'] = $relations['patent'];
-        $relData['child'] = $relations['child'];
-    }
 
+    /**
+     * Base insert & update work
+     * @param $data
+     * @return array
+     */
     private function api_save($data)
     {
         $item = $current_id = $relations = null;
@@ -178,7 +178,7 @@ class Main
                 ? json_decode($data['relation'], true)
                 : null;
 
-        }catch (Exception $e) {
+        } catch (Exception $e) {
             $resp['operation_error'] = 'Parse data JSON catch exception: ' . $e->getMessage();
         }
 
@@ -189,6 +189,7 @@ class Main
             $itemData['title'] = trim($item['title']);
             $itemData['content'] = trim($item['content']);
             $itemData['created'] = date('d.m.Y H:i:s');
+            $itemData['updated'] = null;
             $itemData['keyword'] = trim($item['keyword']);
             $itemData['description'] = trim($item['description']);
             $itemData['tags'] = trim($item['tags']);
@@ -196,13 +197,13 @@ class Main
             if (empty($data['id'])) {
 
                 $resp['mode'] = 'insert';
-                $result = $this->db->insert('item', $itemData);
+                $resp['res_item'] = $this->db->insert('item', $itemData);
 
-                if(!$result) {
+                if(!$resp['res_item']) {
                     $resp['error'] = true;
                     $resp['error_info'] = $this->db->getError('error');
                 }
-                else $resp['res_item'] = $current_id = $this->db->lastInsertId();
+
 
             } else {
                 $resp['mode'] = 'update';
@@ -217,10 +218,22 @@ class Main
         }
 
         if($relations && $current_id) {
-            foreach ($relations as $rel) {
-                $result = $this->modelRelation->insertIfNotExist((int) $rel['parent'], (int) $current_id);
-                $resp['res_relations'][] = $result;
+            $relations = array_values($relations);
+            $ri = 0;
+            while ($ri++ < count($relations)){
+                $resp['res_relations'][] = $this
+                    ->modelRelation
+                    ->insertIfNotExist(
+                        (int) $relations[$ri],
+                        (int) $current_id,
+                        $this->modelRelation->getType($item['deep']));
             }
+
+            /*foreach ($relations as $rel) {
+                $type = $this->modelRelation->getType($item['deep']);
+                $result = $this->modelRelation->insertIfNotExist((int) $rel['parent'], (int) $current_id, $type);
+                $resp['res_relations'][] = $result;
+            }*/
         }
 
         return $resp;
@@ -229,23 +242,27 @@ class Main
 
     private function api_getcategories($data)
     {
-        $categories = $this->modelItem->getCategories();
+        if(SRouter::isXMLHTTPRequest()) {
+            $categories = $this->modelItem->getCategories();
 
-        return [
-            'categories' => $categories,
-        ];
+            return [
+                'categories' => $categories,
+            ];
+        }
     }
 
 
 
     private function api_getsubcategories($data)
     {
-        $categories = $this->modelItem->getCategories();
-        $responseData = [
-            'data' => $data
-        ];
+        if(isset($data['link']) && SRouter::isXMLHTTPRequest()) {
+            $subcategories = $this->modelItem->getSubcategories($data['link']);
 
-        return $responseData;
+            return [
+                'data' => $data,
+                'subcategories' => $subcategories
+            ];
+        }
     }
 
 
