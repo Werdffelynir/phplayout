@@ -147,6 +147,49 @@ a.btn_inline_orange, .btn_inline_orange a{
 
 
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
+
+
+.itemlist{}
+.itempreview{
+    padding: 5px;
+    text-decoration: none;
+    background-color: #f2f2f2;
+    color: #747474;
+    border-bottom: 1px solid #E6E6E6;
+}
+.itempreview:hover{
+    /*background-color: #ffffff;*/
+    /*color: #252525;*/
+}
+
+.itempreview_title{}
+.itempreview_title a{
+    text-decoration: none;
+    color: #747474;
+    display: block;
+}
+.itempreview_title a:hover{
+    text-decoration: none;
+    color: #252525;
+}
+
+.itempreview_date{
+    font-size: 85%;
+    padding-right: 5px;
+    margin-bottom: 3px;
+    color: #A5A3A3;
+    font-style: italic;
+}
+.itempreview_vote{}
+
+
+
+
+/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
+
+
 #editor, #editor input, #editor textarea{
     font-size: 12px;
     font-family: sans-serif;

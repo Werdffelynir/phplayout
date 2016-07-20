@@ -30,11 +30,22 @@ class Item
         //return $this->db->select('*', $this->table, 'deep = 2');
     }
 
-    public function getItems()
+    public function getItem($link)
     {
-        //return $this->db->select('*', $this->table, 'deep = 1');
+        return $this->db->select('*', $this->table, 'link = ? AND deep = ?', [$link, 3], false);
     }
 
+    public function getChildren($link)
+    {
+        $sql = "SELECT ic.*
+                FROM item ic
+                LEFT JOIN relation r ON (r.child = ic.id)
+                LEFT JOIN item ip ON (ip.id = r.parent)
+                WHERE ip.link = :link";
 
+        return $this->db->executeAll($sql, [
+            ':link' => $link
+        ]);
+    }
     
 }

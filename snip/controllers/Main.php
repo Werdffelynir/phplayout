@@ -97,14 +97,40 @@ class Main
             ->outTemplate();
     }
 
-    public function actionCategory()
+    public function actionCategory($cat, $subcat, $item)
     {
+        $subcatItems = $this->modelItem->getChildren($cat);
+
+
+
+        var_dump($cat, $subcat, $item);
+
+        //Helper::session('current_category', $link);
+        //$subcatItems = $this->modelItem->getSubcategoriesItems($link);
+        //$catItems = $this->modelItem->getCategoriesItems($link);
+
         $this->commonLayoutPositions();
         $this->Layout
-            ->setPosition('sidebar', 'sidebar')
-            ->setPosition('content', 'content.category')
+            ->setPosition('sidebar', 'sidebar', ['menu' => $this->Layout->render('menu_subcat', ['items' => $subcatItems])])
+            ->setPosition('content', 'content.category', ['items' => $subcatItems])
             ->outTemplate();
+
     }
+
+    /*
+    public function actionSubcategory($link)
+    {
+        //Helper::session('current_subcategory', $link);
+        $subcat = $this->modelItem->getChildren($link);
+        $items = $this->modelItem->getChildren($link);
+
+        $this->commonLayoutPositions();
+        $this->Layout
+            ->setPosition('sidebar', 'sidebar', ['menu' => $this->Layout->render('menu_subcat', ['items' => $subcat])])
+            ->setPosition('content', 'content.category', ['items' => $items])
+            ->outTemplate();
+    }*/
+
 
     public function actionEditor()
     {
