@@ -155,7 +155,7 @@ if(App.namespace){App.namespace('Action.Relations', function(App) {
                 }
                 else if(_.deep == 3) {
                     var relsecond = App.Catch.get('relation_second')['data'];
-                    _.node['rel_items'].appendChild(_.createItemElement(relfirst.title, relsecond.title, relfirst.id, relsecond.id));
+                    _.node['rel_items'].appendChild(_.createItemElement(relfirst.title +' > '+ relsecond.title, relsecond.id));
 
                 }
                 _.close();

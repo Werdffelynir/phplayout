@@ -1,3 +1,17 @@
+<?php
+/**
+ * @type SLayout $this
+ * @var $items
+ */
+
+$menu = isset($menu) ? $menu : '';
+
+?>
+
+
+<?php echo $menu; ?>
+
+<br>
 
 <ul>
     <li><a href="#link1">PHP</a></li>
