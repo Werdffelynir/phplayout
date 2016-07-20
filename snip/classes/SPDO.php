@@ -24,6 +24,10 @@ class SPDO extends \PDO
     private $bind;
 
 
+    /** @var string  */
+    private $driverName;
+
+
     /**
      * Парамеры конструктора аналогичны родителю
      * <pre>
@@ -48,12 +52,31 @@ class SPDO extends \PDO
 
         try {
             parent::__construct($dsn, $username, $passwd, $options);
+            $this->driverName = $this->getAttribute(\PDO::ATTR_DRIVER_NAME);
         } catch (\PDOException $e) {
             $this->error = $e->getMessage();
         }
 
     }
 
+
+    /**
+     * Возвращает имя текущего драйвера
+     * @return mixed|string
+     */
+    public function driver()
+    {
+        return $this->driverName;
+    }
+
+    /**
+     * Возвращает имена все доступных драйверов
+     * @return array
+     */
+    public function allDrivers()
+    {
+        return \PDO::getAvailableDrivers();
+    }
 
     /**
      * Попытка выполнить запрос. Метод определяет тип операции для выполнения соответстенной задачи

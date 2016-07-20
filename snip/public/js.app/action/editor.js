@@ -4,6 +4,7 @@ if(App.namespace){App.namespace('Action.Editor', function(App) {
      * @namespace App.Action.Editor
      */
     var _ = {
+        item:{id:0},
         node:{}
     };
 
@@ -40,9 +41,11 @@ if(App.namespace){App.namespace('Action.Editor', function(App) {
             Dom('input[name="deep"][value="'+deep+'"]').one(function(elem){elem.checked = true});
             Dom(target).addClass('active_deep');
 
-
             if (deep > 1)
                 App.Api.request('getcategories', function (data) {
+
+                    App.Catch.put('categories', data['categories']);
+
                     App.Action.Relations.open({categories: data['categories'], deep: deep});
                 }, {});
             else
@@ -68,26 +71,57 @@ Linker.click('relation-remove', function (event) {
     //Object { link: "", tags: "", keyword: "", description: "", deep: "3", title: "", content: "" }
     _.saveItem = function(){
 
-        var errors = '',
+        var sendData = {item:null,relation:[]},
+            errors = '',
             require = ['link', 'deep', 'title', 'content'],
+            formError = _.node['form_error'],
             formData = Util.formData(_.node['form'], true);
+
 
         require.map(function (field) {
             if (!formData[field] || formData[field].length < 0)
                 errors += '<p>Field <strong>' + field + '</strong> can`t be empty!</p>';
         });
 
-        if (errors == '') {
-            _.node['form_error'].style.display = 'none';
-            App.Api.request('save', function (data) {
-                console.log('request success:', data);
-            }, formData);
-        } else {
-            _.node['form_error'].style.display = 'block';
-            App.inject(_.node['form_error'], errors);
+        // relations
+        var relationsItems = App.queryAll('.relation_item', '#relation_items');
+        if(relationsItems) {
+            relationsItems.map(function(elem){
+                var cat = elem.getAttribute('data-cat'),
+                    subcat = elem.getAttribute('data-subcat'),
+                    relation = {
+                        parent: (subcat > 0) ? parseInt(subcat) : cat,
+                        child: 'this',
+                        type: (subcat > 0) ? 'item' : 'subcat'
+                    };
+                sendData.relation.push(relation);
+            });
         }
 
+        if (errors == '') {
 
+            formError.style.display = 'none';
+
+            sendData.item = JSON.stringify(formData);
+            sendData.relation = JSON.stringify(sendData.relation);
+
+            // if(formData.deep == 1) { }
+            // Object { data: Object, operation: "insert", operation_result: "26", itemData: Object }
+            App.Api.request('save', function (response) {
+                console.log('### save:', response);
+
+                if(response['operation_error']) {
+                    formError.style.display = 'block';
+                    App.inject(formError, response['operation_error']);
+                }
+
+
+            }, sendData );
+
+        } else {
+            formError.style.display = 'block';
+            App.inject(formError, errors);
+        }
     };
 
     _.saveRemove = function(){};

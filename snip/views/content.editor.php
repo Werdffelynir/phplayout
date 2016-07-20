@@ -56,24 +56,12 @@ $select_relation = $this->render('part.select_relation.php');
 
                 </div>
 
+                <div id="relation_items"></div>
 
-
-                <!--              <div class="relations">
-
-              <!--
-                                  <span class="relation">
-                                      <span class="icon_btn"><i class="icon-cancel linker" data-id="relation-remove"></i></span>
-                                      <span>PHP</span> > <span>File Operation</span>
-                                  </span>
-
-                                  <span class="relation">
-                                      <span class="icon_btn"><i class="icon-plus linker" data-id="relation-add"></i></span>
-                                      <span>Add new relation</span>
-                                  </span>
-
-                </div>  -->
                 <?php echo $select_relation; ?>
+
                 <div id="form_error"></div>
+
             </div>
         </div>
 
@@ -88,3 +76,9 @@ $select_relation = $this->render('part.select_relation.php');
     </form>
 
 </div>
+
+
+<!--                    <div class="relation_item tbl">
+                        <div class="tbl_cell"><i class="icon-cancel"></i></div>
+                        <div class="tbl_cell">PHP > File Operation</div>
+                    </div>-->

@@ -26,7 +26,7 @@ if (App.namespace) { App.namespace('Controller.Page', function(App) {
 
         if (page.route == '/') {
             console.log('main page');
-        } else if (page.route == '/editor') {
+        } else if (page.route.slice(0,7) == '/editor') {
             App.Action.Editor.run();
         }
 

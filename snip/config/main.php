@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'filesystem_owner' => 'www-data',
     'name' => 'Snippets application',
     'router' => [
         'path' => '/',
@@ -10,7 +11,7 @@ return [
         'template' => 'layout/template',
     ],
     'db' => [
-        'dsn' => 'sqlite:database/treen.sqlite3',
+        'dsn' => 'sqlite:'.dirname(__DIR__).'/database/snippets.db',
         'username' => '',
         'passwd' => '',
         'options' => [],

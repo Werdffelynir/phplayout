@@ -10,7 +10,7 @@ require_once('controllers/Main.php');
 $params = include 'config/main.php';
 
 $SRouter = new SRouter($params['router']);
-$SRouter->forceRun(true);
+//$SRouter->forceRun(true);
 
 
 /**
@@ -18,12 +18,10 @@ $SRouter->forceRun(true);
  */
 $SLayout = new SLayout();
 
-
 /**
  * Work with database
  */
 $SPDO = new \db\SPDO($params['db']['dsn']);
-
 
 /**
  * Base controller
@@ -33,6 +31,8 @@ $Controller = new Main($params, $SRouter, $SLayout, $SPDO);
 
 $SRouter->get('/', [$Controller,'actionIndex']);
 $SRouter->get('/c/:p!', [$Controller,'actionCategory']);
+//$SRouter->get('/s/:p!', [$Controller,'actionSubcategory']);
+//$SRouter->get('/i/:p!', [$Controller,'actionItem']);
 $SRouter->get('/editor/:p?', [$Controller,'actionEditor']);
 $SRouter->post('/api', [$Controller,'actionApi']);
 
@@ -101,5 +101,9 @@ $R->get('/item/:n!', function($id){
 });
 */
 
-if($errors = $SRouter->getRouterErrors())
-    print_r($errors);
+if($errors = $SRouter->getRouterErrors()) {
+    var_dump($errors);
+    exit;
+}
+
+$SRouter->run();

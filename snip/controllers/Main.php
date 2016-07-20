@@ -43,6 +43,8 @@ class Main
      */
     public function __construct($params, $SRouter, $SLayout, $SPDO)
     {
+        //$this->dbFilePermissions($params);
+
         $this->params = $params;
         $this->Router = $SRouter;
         $this->Layout = $SLayout;
@@ -52,6 +54,18 @@ class Main
         $this->modelRelation = new Relation($this->db);
 
         $this->commonLayoutVariables();
+    }
+
+    private function dbFilePermissions($params)
+    {
+        $path = implode('',array_slice(explode(':', $params['db']['dsn']), 1));
+        if(is_file($path)) {
+            $permission = substr(sprintf('%o', fileperms($path)), -4);
+            if(is_numeric($permission) && $permission != '0777') {
+                chmod($path, 0777);
+                chown($path, $params['filesystem_owner']);
+            }
+        }
     }
 
 
@@ -134,33 +148,82 @@ class Main
         }
     }
 
+    private function api_save_relations(array $relations)
+    {
+        $relData['patent'] = $relations['patent'];
+        $relData['child'] = $relations['child'];
+    }
 
     private function api_save($data)
     {
-        $operation = 'insert';
-        $result = false;
-        $data['deep'] = trim($_POST['deep']);
-        $data['link'] = trim($_POST['link']);
-        $data['title'] = trim($_POST['title']);
-        $data['content'] = trim($_POST['content']);
-        $data['created'] = date('d.m.Y H:i:s');
-        $data['keyword'] = trim($_POST['keyword']);
-        $data['description'] = trim($_POST['description']);
-        $data['tags'] = trim($_POST['tags']);
+        $item = $current_id = $relations = null;
+        $resp = [
+            //'data' => $data,
+            'error' => null,
+            'error_info' => null,
+            'mode' => '',
+            'res_item' => null,
+            'res_relations' => [],
+        ];
 
-        if (empty($data['id'])) {
-            $result = $this->db->insert('item', $data);
-        } else {
-            $operation = 'update';
-            $id = $data['id'];
-            unset($data['id']);
-            $result = $this->db->update('item', $data, 'id = ?', $id);
+        try{
+
+            $item = json_decode($data['item'], true) ;
+
+            $current_id = isset($item['id'])
+                ? $item['id']
+                : null;
+
+            $relations = !empty($data['relation'])
+                ? json_decode($data['relation'], true)
+                : null;
+
+        }catch (Exception $e) {
+            $resp['operation_error'] = 'Parse data JSON catch exception: ' . $e->getMessage();
         }
 
-        return [
-            'operation' => $operation,
-            'id' => $result,
-        ];
+        if($item) {
+
+            $itemData['deep'] = trim($item['deep']);
+            $itemData['link'] = trim($item['link']);
+            $itemData['title'] = trim($item['title']);
+            $itemData['content'] = trim($item['content']);
+            $itemData['created'] = date('d.m.Y H:i:s');
+            $itemData['keyword'] = trim($item['keyword']);
+            $itemData['description'] = trim($item['description']);
+            $itemData['tags'] = trim($item['tags']);
+
+            if (empty($data['id'])) {
+
+                $resp['mode'] = 'insert';
+                $result = $this->db->insert('item', $itemData);
+
+                if(!$result) {
+                    $resp['error'] = true;
+                    $resp['error_info'] = $this->db->getError('error');
+                }
+                else $resp['res_item'] = $current_id = $this->db->lastInsertId();
+
+            } else {
+                $resp['mode'] = 'update';
+                $result = $this->db->update('item', $itemData, 'id = ?', (int) $data['id']);
+
+                if(!$result) {
+                    $resp['error'] = true;
+                    $resp['error_info'] = $this->db->getError('error');
+                }
+                else $resp['res_item'] = $data['id'];
+            }
+        }
+
+        if($relations && $current_id) {
+            foreach ($relations as $rel) {
+                $result = $this->modelRelation->insertIfNotExist((int) $rel['parent'], (int) $current_id);
+                $resp['res_relations'][] = $result;
+            }
+        }
+
+        return $resp;
     }
 
 
