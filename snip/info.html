@@ -92,6 +92,476 @@ sudo chown www-data:www-data /var/www/phplayout/snip/database/snippets.sqlite3
 ========================
 
 
+========================
+
+DROP TABLE IF EXISTS "main"."types";
+CREATE TABLE "main"."types" (
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "deep" INTEGER NOT NULL,
+    "type" TEXT DEFAULT NULL
+);
+
+
+DROP TABLE IF EXISTS "main"."types";
+CREATE TABLE IF NOT EXISTS "main"."types"(
+    "name" TEXT PRIMARY KEY,
+    "deep" INTEGER UNIQUE NOT NULL
+) WITHOUT ROWID;
+
+INSERT INTO "main"."types" VALUES ('category', 1) ;
+INSERT INTO "main"."types" VALUES ('subcategory', 2) ;
+INSERT INTO "main"."types" VALUES ('item', 3) ;
+
+
+
+CREATE TABLE parent(a PRIMARY KEY, b UNIQUE, c, d, e, f);
+CREATE UNIQUE INDEX i1 ON parent(c, d);
+
+
+UPDATE item SET updated = CURRENT_TIMESTAMP, keyword = '';
+
+UPDATE item SET created = '01.07.2016 01:30:53' WHERE id < 16;
+
+
+
+
+SELECT itch.* FROM item itp
+LEFT JOIN relation r ON (r.parent = itp.id)
+LEFT JOIN item itch ON (itch.id = r.child)
+WHERE  itp.link = 'css'  AND  itp.deep = 1;
+
+$sql = "SELECT itch.* FROM item itch
+LEFT JOIN relation r ON (r.child = itch.id)
+LEFT JOIN item itp ON (itp.id = r.parent)
+WHERE  itp.link = :link  AND  itp.deep = :deep";
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+========================
+========================
+========================
+========================
+========================
+========================
+
+
+
+                AUTOINCREMENT does not work on WITHOUT ROWID tables
+
+========================
+
+
+AUTOINCREMENT Keyword
+
+If a column has the type INTEGER PRIMARY KEY AUTOINCREMENT
+
+
+========================
+
+
+CREATE TABLE artist(
+    artistid    INTEGER PRIMARY KEY,
+    artistname  TEXT
+);
+CREATE TABLE track(
+    trackid     INTEGER,
+    trackname   TEXT,
+    trackartist INTEGER     -- Must map to an artist.artistid!
+);
+                               |
+CREATE TABLE track(
+    trackid     INTEGER,
+    trackname   TEXT,
+    trackartist INTEGER,
+    FOREIGN KEY(trackartist) REFERENCES artist(artistid)
+);
+
+
+========================
+
+
+trackartist IS NULL OR EXISTS(SELECT 1 FROM artist WHERE artistid=trackartist)
+
+
+========================
+
+
+CREATE TABLE parent(a PRIMARY KEY, b UNIQUE, c, d, e, f);
+CREATE UNIQUE INDEX i1 ON parent(c, d);
+CREATE INDEX i2 ON parent(e);
+CREATE UNIQUE INDEX i3 ON parent(f COLLATE nocase);
+
+CREATE TABLE child1(f, g REFERENCES parent(a));                        -- Ok
+CREATE TABLE child2(h, i REFERENCES parent(b));                        -- Ok
+CREATE TABLE child3(j, k, FOREIGN KEY(j, k) REFERENCES parent(c, d));  -- Ok
+CREATE TABLE child4(l, m REFERENCES parent(e));                        -- Error!
+CREATE TABLE child5(n, o REFERENCES parent(f));                        -- Error!
+CREATE TABLE child6(p, q, FOREIGN KEY(p, q) REFERENCES parent(b, c));  -- Error!
+CREATE TABLE child7(r REFERENCES parent(c));                           -- Error!
+
+
+========================
+
+
+CREATE TABLE artist(
+artistid    INTEGER PRIMARY KEY,
+artistname  TEXT
+);
+CREATE TABLE track(
+trackid     INTEGER,
+trackname   TEXT,
+trackartist INTEGER REFERENCES artist
+);
+CREATE INDEX trackindex ON track(trackartist);
+
+
+========================
+
+
+
+CREATE TABLE album(
+albumartist TEXT,
+albumname TEXT,
+albumcover BINARY,
+PRIMARY KEY(albumartist, albumname)
+);
+
+CREATE TABLE song(
+songid     INTEGER,
+songartist TEXT,
+songalbum TEXT,
+songname   TEXT,
+FOREIGN KEY(songartist, songalbum) REFERENCES album(albumartist, albumname)
+);
+
+========================
+
+CREATE TABLE artist(
+artistid    INTEGER PRIMARY KEY,
+artistname  TEXT
+);
+CREATE TABLE track(
+trackid     INTEGER,
+trackname   TEXT,
+trackartist INTEGER REFERENCES artist(artistid) DEFERRABLE INITIALLY DEFERRED
+);
+
+
+
+========================
+
+CASCADE: A "CASCADE" action propagates the delete or update operation on the parent key to each dependent child key.
+
+
+CREATE TABLE artist(
+    artistid    INTEGER PRIMARY KEY,
+    artistname  TEXT
+);
+CREATE TABLE track(
+    trackid     INTEGER,
+    trackname   TEXT,
+    trackartist INTEGER REFERENCES artist(artistid) ON UPDATE CASCADE
+);
+
+
+
+------------------------------------------------------------------------------------------------------------
+UPDATE artist SET artistid = 100 WHERE artistname = 'Dean Martin';
+
+sqlite> SELECT * FROM artist;
+artistid  artistname
+--------  -----------------
+2         Frank Sinatra
+100       Dean Martin
+
+sqlite> SELECT * FROM track;
+trackid  trackname          trackartist
+-------  -----------------  -----------
+11       That's Amore       100
+12       Christmas Blues    100
+13       My Way             2
+------------------------------------------------------------------------------------------------------------
+
+
+CREATE TABLE artist(
+artistid    INTEGER PRIMARY KEY,
+artistname  TEXT
+);
+CREATE TABLE track(
+trackid     INTEGER,
+trackname   TEXT,
+trackartist INTEGER DEFAULT 0 REFERENCES artist(artistid) ON DELETE SET DEFAULT
+);
+
+========================
+Those familiar with SQLite triggers will have noticed that the "ON DELETE SET DEFAULT" action demonstrated in the
+example above is similar in effect to the following AFTER DELETE trigger:
+
+
+CREATE TRIGGER on_delete_set_default AFTER DELETE ON artist BEGIN
+UPDATE child SET trackartist = 0 WHERE trackartist = old.artistid;
+END;
+
+
+Assuming that customer records are stored in the "customers" table, and that order records are stored in the "orders" table, the following UPDATE trigger ensures that all associated orders are redirected when a customer changes his or her address:
+
+CREATE TRIGGER update_customer_address UPDATE OF address ON customers
+BEGIN
+UPDATE orders SET address = new.address WHERE customer_name = old.name;
+END;
+
+With this trigger installed, executing the statement:
+
+UPDATE customers SET address = '1 Main St.' WHERE name = 'Jack Jones';
+
+causes the following to be automatically executed:
+
+UPDATE orders SET address = '1 Main St.' WHERE customer_name = 'Jack Jones';
+
+For an example of an INSTEAD OF trigger, consider the following schema:
+
+CREATE TABLE customer(
+cust_id INTEGER PRIMARY KEY,
+cust_name TEXT,
+cust_addr TEXT
+);
+CREATE VIEW customer_address AS
+SELECT cust_id, cust_addr FROM customer;
+CREATE TRIGGER cust_addr_chng
+INSTEAD OF UPDATE OF cust_addr ON customer_address
+BEGIN
+UPDATE customer SET cust_addr=NEW.cust_addr
+WHERE cust_id=NEW.cust_id;
+END;
+
+With the schema above, a statement of the form:
+
+UPDATE customer_address SET cust_addr=$new_address WHERE cust_id=$cust_id;
+
+========================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+CREATE TABLE t1(a, b UNIQUE);
+
+CREATE TABLE t1(a, b PRIMARY KEY);
+
+CREATE TABLE t1(a, b);
+CREATE UNIQUE INDEX t1b ON t1(b);
+
+
+========================
+
+The SQL language features several contexts where an expression is evaluated and the result converted to a boolean (true or false) value. These contexts are:
+
+the WHERE clause of a SELECT, UPDATE or DELETE statement,
+the ON or USING clause of a join in a SELECT statement,
+the HAVING clause of a SELECT statement,
+the WHEN clause of an SQL trigger, and
+the WHEN clause or clauses of some CASE expressions.
+
+
+
+========================
+
+
+Each value stored in an SQLite database (or manipulated by the database engine) has one of the following storage classes:
+
+NULL. The value is a NULL value.
+
+INTEGER. The value is a signed integer, stored in 1, 2, 3, 4, 6, or 8 bytes depending on the magnitude of the value.
+
+REAL. The value is a floating point value, stored as an 8-byte IEEE floating point number.
+
+TEXT. The value is a text string, stored using the database encoding (UTF-8, UTF-16BE or UTF-16LE).
+
+BLOB. The value is a blob of data, stored exactly as it was input.
+
+
+
+========================
+
+
+Date and Time Datatype
+
+SQLite does not have a storage class set aside for storing dates and/or times. Instead, the built-in Date And Time Functions of SQLite are capable of storing dates and times as TEXT, REAL, or INTEGER values:
+
+TEXT    as ISO8601 strings ("YYYY-MM-DD HH:MM:SS.SSS").
+REAL    as Julian day numbers, the number of days since noon in Greenwich on November 24, 4714 B.C. according to the proleptic Gregorian calendar.
+INTEGER as Unix Time, the number of seconds since 1970-01-01 00:00:00 UTC.
+
+
+========================
+
+
+
+CREATE TABLE t(x INTEGER PRIMARY KEY ASC, y, z);
+CREATE TABLE t(x INTEGER, y, z, PRIMARY KEY(x ASC));
+CREATE TABLE t(x INTEGER, y, z, PRIMARY KEY(x DESC));
+
+
+
+To create a WITHOUT ROWID table, simply add the keywords "WITHOUT ROWID" to the end of the CREATE TABLE statement. For example:
+
+CREATE TABLE IF NOT EXISTS wordcount(
+word TEXT PRIMARY KEY,
+cnt INTEGER
+) WITHOUT ROWID;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+CREATE TABLE t1(a, b UNIQUE);
+
+CREATE TABLE t1(a, b PRIMARY KEY);
+
+CREATE TABLE t1(a, b);
+CREATE UNIQUE INDEX t1b ON t1(b);
+
+
+
+SELECT IFNULL(y, 'null') FROM child;
+
+========================
+
+
+Comparison Expressions
+
+SQLite version 3 has the usual set of SQL comparison operators including
+
+"=", "==", "<", "<=", ">", ">=", "!=", "", "IN", "NOT IN", "BETWEEN", "IS", and "IS NOT", .
+
+
+========================
+
+
+x IN (SELECT y ...)"
+
+
+========================
+
+UNION, INTERSECT, or EXCEPT
+
+NOT NULL, CHECK, UNIQUE, PRIMARY KEY and FOREIGN KEY
+
+========================
+
+
+CURRENT_TIME, CURRENT_DATE or CURRENT_TIMESTAMP,
+
+then the value used in the new row is a text representation of the current UTC date and/or time.
+            CURRENT_TIME        "HH:MM:SS"
+            CURRENT_DATE        "YYYY-MM-DD"
+            CURRENT_TIMESTAMP   "YYYY-MM-DD HH:MM:SS"
+
+
+========================
+
+
+The expression "x BETWEEN y and z"
+
+
+========================
+
+
+Each column in an SQLite 3 database is assigned one of the following type affinities:
+
+    TEXT
+    NUMERIC
+    INTEGER
+    REAL
+    BLOB
+
+
+
+========================                    EXPLAIN
+
+
+
+EXPLAIN может в точности рассказать вам, что происходит, когда вы выполняете запрос.
+
+EXPLAIN SELECT *  FROM COMPANY  WHERE Salary >= 20000;
+
+
+========================
+
+
+var relationsItems = App.queryAll('.relation_item', '#relation_items');
+if(relationsItems) {
+relationsItems.map(function(elem){
+var cat = elem.getAttribute('data-cat'),
+subcat = elem.getAttribute('data-subcat'),
+relation = {
+parent: (subcat > 0) ? parseInt(subcat) : cat,
+child: 'this',
+type: (subcat > 0) ? 'item' : 'subcat'
+};
+sendData.relation.push(relation);
+});
+}
+
+
+========================
+
+/**
+* @namespace App.Action.Relations.createItem
+* @returns {Element}
+*/
+_.createItemElement = function(cat, subcat, cat_id, subcat_id) {
+
+subcat = subcat || null;
+cat_id = cat_id || null;
+subcat_id = subcat_id || null;
+
+var
+item = Util.createElement('div', {'class': 'relation_item tbl', 'data-cat': cat_id, 'data-subcat': subcat_id}),
+icon = Util.createElement('i', {'class': 'icon-cancel'}),
+cell_ico = Util.createElement('div', {'class': 'tbl_cell'}),
+cell_desc = Util.createElement('div', {'class': 'tbl_cell'}, cat + (subcat ? ' > ' + subcat : '') );
+
+icon.addEventListener('click', _.onRemoveItemElement, false);
+cell_ico.appendChild(icon);
+item.appendChild(cell_ico);
+item.appendChild(cell_desc);
+return item;
+};
 
 
 
@@ -164,4 +634,14 @@ sudo chown www-data:www-data /var/www/phplayout/snip/database/snippets.sqlite3
 ========================
 
 
+
+
+
+========================
+
+
+
+
+
+========================
 

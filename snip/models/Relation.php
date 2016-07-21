@@ -23,24 +23,42 @@ class Relation
     /**
      * @param $parent
      * @param $child
+     * @param $type
      * @return int|null
      */
-    public function insertIfNotExist($parent, $child)
+    public function insertIfNotExist($parent, $child, $type = '')
     {
         $result = null;
+
         $exist = $this->db->select('*', $this->table, 'parent = :parent AND child = :child', [
             ':parent' => $parent,
-            ':child' => $child
+            ':child' => $child,
         ]);
+
+
         if(!$exist) {
+
             $result = $this->db->insert( $this->table , [
                 'parent' => $parent,
-                'child' => $child
+                'child' => $child,
+                'type' => $type,
             ]);
+
+        } else {
+            return $exist;
         }
+
         return $result;
     }
 
+    public function getType($deep)
+    {
+        $tbl[0] = '';
+        $tbl[1] = 'category';
+        $tbl[2] = 'subcategory';
+        $tbl[3] = 'item';
+        return $tbl[(int)$deep];
+    }
 
 
 

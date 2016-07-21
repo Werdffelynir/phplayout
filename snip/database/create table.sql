@@ -1,0 +1,6 @@
+DROP TABLE IF EXISTS "main"."types";
+CREATE TABLE "main"."types" (
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "deep" INTEGER NOT NULL,
+    "type" TEXT DEFAULT NULL
+);
