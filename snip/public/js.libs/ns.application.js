@@ -16,6 +16,7 @@
         this.setProperties(properties);
 
         this.domLoaded = app.domLoaded;
+        this.redirect = app.redirect;
         this.request = app.request;
         this.script = app.script;
         this.style = app.style;
@@ -223,6 +224,9 @@
         return path;
     };
 
+    app.redirect = function (to) {
+        window.location.href = to || window.location.href;
+    };
 
     /**
      * Simple template builder

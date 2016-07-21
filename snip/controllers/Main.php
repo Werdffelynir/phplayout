@@ -101,6 +101,9 @@ class Main
     {
         $items = [];
         $itemsMenu = [];
+        $this->Layout->value('currentActionCat', $cat);
+        $this->Layout->value('currentActionSubcat', $subcat);
+        $this->Layout->value('currentActionItem', $item);
 
         if (!empty($item)) {
 
@@ -198,7 +201,7 @@ class Main
     {
         $item = $current_id = $relations = null;
         $resp = [
-            //'data' => $data,
+            'data' => $data,
             'error' => null,
             'error_info' => null,
             'mode' => '',
@@ -228,7 +231,7 @@ class Main
             $itemData['link'] = trim($item['link']);
             $itemData['title'] = trim($item['title']);
             $itemData['content'] = trim($item['content']);
-            $itemData['created'] = date('d.m.Y H:i:s');
+            $itemData['created'] = date('Y-m-d H:i:s');
             $itemData['updated'] = null;
             $itemData['keyword'] = trim($item['keyword']);
             $itemData['description'] = trim($item['description']);
@@ -237,13 +240,12 @@ class Main
             if (empty($data['id'])) {
 
                 $resp['mode'] = 'insert';
-                $resp['res_item'] = $this->db->insert('item', $itemData);
+                $resp['res_item'] = $current_id = $this->db->insert('item', $itemData);
 
                 if(!$resp['res_item']) {
                     $resp['error'] = true;
                     $resp['error_info'] = $this->db->getError('error');
                 }
-
 
             } else {
                 $resp['mode'] = 'update';
@@ -259,21 +261,10 @@ class Main
 
         if($relations && $current_id) {
             $relations = array_values($relations);
-            $ri = 0;
-            while ($ri++ < count($relations)){
-                $resp['res_relations'][] = $this
-                    ->modelRelation
-                    ->insertIfNotExist(
-                        (int) $relations[$ri],
-                        (int) $current_id,
-                        $this->modelRelation->getType($item['deep']));
-            }
-
-            /*foreach ($relations as $rel) {
+            foreach ($relations as $rel) {
                 $type = $this->modelRelation->getType($item['deep']);
-                $result = $this->modelRelation->insertIfNotExist((int) $rel['parent'], (int) $current_id, $type);
-                $resp['res_relations'][] = $result;
-            }*/
+                $resp['res_relations'][] = $this->modelRelation->insertIfNotExist((int)$rel, (int)$current_id, $type);
+            }
         }
 
         return $resp;

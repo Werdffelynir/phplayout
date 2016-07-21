@@ -6,15 +6,15 @@
  * @type array $categories
  */
 
+$url = '/q/';
 
-$url = $this->value('url');
 ?>
 
 <div class="tbl">
     <div class="tbl_cell">
         <ul>
             <?php foreach($categories as $cat):?>
-                <li><a href="<?=$url?>c/<?=$cat['link']?>"><?=$cat['title']?></a></li>
+                <li><a href="<?php echo $url . $cat['link']?>"><?php echo $cat['title']?></a></li>
             <?php endforeach;?>
         </ul>
     </div>

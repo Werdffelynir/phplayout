@@ -26,7 +26,7 @@ class Relation
      * @param $type
      * @return int|null
      */
-    public function insertIfNotExist($parent, $child, $type = '')
+    public function insertIfNotExist($parent, $child, $type)
     {
         $result = null;
 
@@ -53,7 +53,7 @@ class Relation
 
     public function getType($deep)
     {
-        $tbl[0] = '';
+        $tbl[0] = 'undefined';
         $tbl[1] = 'category';
         $tbl[2] = 'subcategory';
         $tbl[3] = 'item';
