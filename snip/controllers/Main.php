@@ -104,7 +104,6 @@ class Main
 
         if (!empty($item)) {
 
-
         }
         else if (!empty($subcat)) {
             $items = $this->modelItem->getSubcategoriesItems($subcat);
@@ -114,9 +113,6 @@ class Main
             $items = $this->modelItem->getCategoriesItems($cat);
             $itemsMenu = $this->modelItem->getChildren($cat, 1);
         }
-
-
-
 
         //var_dump($cat, $subcat, $item);
         //Helper::session('current_category', $link);
