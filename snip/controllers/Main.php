@@ -105,6 +105,13 @@ class Main
         $this->Layout->value('currentActionSubcat', $subcat);
         $this->Layout->value('currentActionItem', $item);
 
+        $this->addFrontend([
+            'url' => $this->Router->getUrl(),
+            'urlFull' => $this->Router->getFullUrl(),
+            'queryCat' => $cat,
+            'querySubcat' => $subcat,
+            'queryItem' => $item,
+        ]);
         if (!empty($item)) {
 
 
@@ -126,12 +133,12 @@ class Main
         //$subcatItems = $this->modelItem->getSubcategoriesItems($link);
         //$catItems = $this->modelItem->getCategoriesItems($link);
 
+        $this->sendFrontendData();
         $this->commonLayoutPositions();
         $this->Layout
             ->setPosition('sidebar', 'sidebar', ['menu' => $this->Layout->render('menu_subcat', ['items' => $itemsMenu])])
             ->setPosition('content', 'content.category', ['items' => $items])
             ->outTemplate();
-
     }
 
     /*
@@ -162,6 +169,27 @@ class Main
     private function sessionToken($token = false)
     {
         return 'secret_session_token_key';
+    }
+
+    private $frontendData = [];
+/*    public function addFrontend($key, $value = null, $onlyOne = false)
+    {
+        if(is_array($key) && $onlyOne === false)
+            foreach ($key as $k => $v)
+                $this->addFrontend($k, $v, true);
+        else
+            $this->frontendData[$key] = $value;
+    }*/
+    public function addFrontend($key, $value = null)
+    {
+        if(is_array($key))
+            foreach ($key as $k => $v) $this->addFrontend($k, $v);
+        else if(is_string($key))
+            $this->frontendData[$key] = $value;
+    }
+    public function sendFrontendData()
+    {
+        Helper::cookies('app', json_encode($this->frontendData), 0, '/');
     }
 
     /*   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *

@@ -38,7 +38,7 @@ $url = $this->value('url');
     <div id="navigation">
         <?php SLayout::outPosition('navigation')?>
     </div>
-    <div id="header">
+    <div id="header" class="color_bg_header">
         <?php SLayout::outPosition('header')?>
     </div>
     <div id="container" class="tbl">
@@ -49,8 +49,12 @@ $url = $this->value('url');
             <?php SLayout::outPosition('content')?>
         </div>
     </div>
-    <div id="footer">footer</div>
+    <div id="footer">
+        <div class="copy_org">open Web Code</div>
+    </div>
+    <div class="logo"><i>psycho</i><i>Sun</i><i>Light</i><i>System</i></div>
 </div>
+
 
 </body>
 </html>

@@ -3,7 +3,8 @@ window.App = new NamespaceApplication({
     path: '/',
     debug: true,
     token: 'secret_token_key',
-    constructsType: false
+    constructsType: false,
+    server: {}
 });
 
 
@@ -55,5 +56,9 @@ function initLibs(list){
 function initDependence(list){
     console.log('Application start!');
 
+    try{
+        App.server = JSON.parse(Util.Cookie('app'));
+    }catch(e){}
+console.log(App.server);
     App.Controller.Page.construct();
 }

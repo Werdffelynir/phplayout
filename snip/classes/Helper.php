@@ -18,6 +18,12 @@ class Helper
         return false;
     }
 
+    /**
+     * ( string $name [, string $value [, int $expire = 0 [, string $path [, string $domain [, bool $secure = false [, bool $httponly = false ]]]]]] )
+     * @param $name
+     * @param null $value
+     * @return mixed|null
+     */
     static public function cookies($name, $value = null)
     {
         $argsNum = func_num_args();

@@ -70,10 +70,13 @@
     /**
      * Вернет все выбраные объекты
      * Не изменяет экземпляр
+     * @param callback
      * @returns {Array}
      */
-    proto.all = function (){
+    proto.all = function (callback){
         if(this.elements.length == 0) return;
+        if(typeof callback === 'function')
+            callback.call(this, this.elements);
         return this.elements;
     };
 
