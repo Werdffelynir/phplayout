@@ -150,8 +150,8 @@ if(App.namespace){App.namespace('Action.Relations', function(App) {
 
                 var relfirst = App.Catch.get('relation_first')['data'];
 
-                if(_.deep == 2) {
-                    _.node['rel_items'].appendChild(_.createItemElement(relfirst.title, false, relfirst.id));
+                if(_.deep == 2 && _.countItems() < 1) {
+                    _.node['rel_items'].appendChild(_.createItemElement(relfirst.title, relfirst.id));
                 }
                 else if(_.deep == 3) {
                     var relsecond = App.Catch.get('relation_second')['data'];
@@ -202,6 +202,10 @@ if(App.namespace){App.namespace('Action.Relations', function(App) {
         item.parentNode.removeChild(item)
     };
 
+    _.countItems = function() {
+        var allItems =  Dom('.relation_item', _.node['rel_items']).all();
+        return Util.isArr(allItems) ? allItems.length : 0;
+    };
 
     return _;
 })}

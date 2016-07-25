@@ -566,15 +566,32 @@ return item;
 
 
 ========================
+sqlite> pragma integrity_check;
+Error: database disk image is malformed
 
+sqlite> .mode insert
+sqlite> .output mydb_export.sql
+sqlite> .dump
+sqlite> .exit
 
+mv mydb.db mydb.db.original
 
+sqlite3 mydb.db < mydb_export.sql
+
+sqlite> analyze;
+sqlite> .exit
 
 
 ========================
 
 
+For example:
 
+// similar behavior as an HTTP redirect
+window.location.replace("http://stackoverflow.com");
+
+// similar behavior as clicking on a link
+window.location.href = "http://stackoverflow.com";
 
 
 ========================

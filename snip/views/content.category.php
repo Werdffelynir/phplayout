@@ -7,6 +7,7 @@
 
 //var_dump($this);
 
+$uri = '/q/' . $this->value('currentActionCat') . '/' . $this->value('currentActionSubcat') . '/';
 
 ?>
 
@@ -15,7 +16,7 @@
     <?php foreach($items as $item): ?>
 
             <div class="tbl itempreview">
-                <div class="tbl_cell itempreview_title"><a href="/i/<?php echo $item['link'] ?>"><?php echo $item['title'] ?></a></div>
+                <div class="tbl_cell itempreview_title"><a href="<?php echo $uri . $item['link'] ?>"><?php echo $item['title'] ?></a></div>
                 <div class="tbl_cell text_right width_10 itempreview_date"><?php echo date("d.m.Y", strtotime($item['created'])) ?></div>
                 <div class="tbl_cell text_center width_4 itempreview_vote"><?php echo !empty($item['vote'])?$item['vote']:' + ' ?></div>
             </div>

@@ -85,10 +85,12 @@ Linker.click('relation-remove', function (event) {
         var ri, relitem = App.queryAll('.relation_item', '#relation_items');
 
         if(relitem)
-            for(ri = 0; ri < relitem.length; ri++)
-                sendData.relation.push(relitem[ri].getAttribute('data-id'));
+            for(ri = 0; ri < relitem.length; ri++) {
+                var attrDataId = relitem[ri].getAttribute('data-id');
+                sendData.relation.push(parseInt(attrDataId));
+            }
 
-        console.log(sendData.relation);
+        //console.log('sendData.relation:', sendData.relation);
 
         if (errors == '') {
 
@@ -98,15 +100,17 @@ Linker.click('relation-remove', function (event) {
             sendData.relation = JSON.stringify(sendData.relation);
 
             // if(formData.deep == 1) { }
-            // Object { data: Object, operation: "insert", operation_result: "26", itemData: Object }
+            // Object {data: Object, error: null, error_info: null, mode: "insert", res_item: "11"…}
             App.Api.request('save', function (response) {
+
                 console.log('### save:', response);
 
                 if(response['error']) {
                     formError.style.display = 'block';
                     App.inject(formError, response['error_info']);
+                }else{
+                    App.redirect('/editor/' + response['res_item']);
                 }
-
 
             }, sendData );
 

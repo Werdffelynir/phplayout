@@ -11,7 +11,7 @@ return [
         'template' => 'layout/template',
     ],
     'db' => [
-        'dsn' => 'sqlite:'.dirname(__DIR__).'/database/snippets.db',
+        'dsn' => 'sqlite:'.dirname(__DIR__).'/database/items.db',
         'username' => '',
         'passwd' => '',
         'options' => [],
