@@ -17,6 +17,19 @@ class Item
      */
     private $table = 'item';
 
+    public $fields = [
+        'id',
+        'deep',
+        'link',
+        'title',
+        'content',
+        'created',
+        'updated',
+        'keyword',
+        'description',
+        'tags',
+    ];
+
     /**
      * Item constructor.
      * @param PDO $db
@@ -36,9 +49,10 @@ class Item
 
     public function getCategoriesItems($link)
     {
-        $sql = "SELECT ich.* FROM item ich
+        $sql = "SELECT ich.*, its.link as parent_link FROM item ich
                 LEFT JOIN relation rch ON (rch.child = ich.id)
                 LEFT JOIN relation rp ON (rp.child = rch.parent)
+                LEFT JOIN item its ON (its.id = rch.parent) 
                 LEFT JOIN item itp ON (itp.id = rp.parent) 
                 WHERE  itp.link = :link AND itp.deep = 1 AND ich.deep = 3;";
 
@@ -57,7 +71,7 @@ class Item
 
     public function getSubcategoriesItems($link)
     {
-        $sql = "SELECT ich.* FROM item ich
+        $sql = "SELECT ich.*, itp.link as parent_link FROM item ich
                 LEFT JOIN relation rp ON (rp.child = ich.id)
                 LEFT JOIN item itp ON (itp.id = rp.parent) 
                 WHERE  itp.link = :link AND itp.deep = 2 AND ich.deep = 3;";
@@ -76,7 +90,12 @@ class Item
 
     public function getItem($link)
     {
-        return $this->db->select('*', $this->table, 'link = ? AND deep = ?', [$link, 3], false);
+        return $this->db->select('*', $this->table, 'link = ?', [$link], false);
+    }
+
+    public function getItemID($id)
+    {
+        return $this->db->select('*', $this->table, 'id = ?', [$id], false);
     }
 
     /**

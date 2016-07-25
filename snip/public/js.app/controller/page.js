@@ -16,13 +16,24 @@ if (App.namespace) { App.namespace('Controller.Page', function(App) {
      */
     page.construct = function(){
 
-        Dom.loaded(page.loaded);
+        // Init Highlighter
+        hljs.initHighlightingOnLoad();
 
+        Dom.loaded(page.loaded);
 
 
     };
 
     page.loaded = function(){
+
+        // Width Highlighter
+        // Timer.timeout(function(){
+        //     Dom('.hljs').css('width', Util.getPosition(Dom('#content').one()).width + 'px');
+        // }, 1000);
+
+
+
+
 
         Dom('#navigation li>a').all(function(items){
             items.forEach(function (its) {

@@ -13,6 +13,8 @@ if(App.namespace){App.namespace('Action.Editor', function(App) {
      */
     _.run = function(){
 
+
+
         // Elements nodes
         _.node['form'] = App.query('form[name=edit]');
         _.node['form_error'] = App.query('#form_error');
@@ -30,15 +32,19 @@ if(App.namespace){App.namespace('Action.Editor', function(App) {
             if (type == 'save') _.saveItem();
             if (type == 'remove') _.saveRemove();
             if (type == 'new') _.saveNew();
+            if (type == 'full') _.resizeTextarea();
         });
 
         Linker.click('item-deep', function (event) {
 
+            if (App.server['editMode'] == 'update')
+                return;
+
             var target = event.target;
             var deep = target.getAttribute('data-deep');
+            Dom('input[name="deep"][value="'+deep+'"]').one(function(elem){elem.checked = true});
 
             Dom('span', target.parentNode).removeClass('active_deep');
-            Dom('input[name="deep"][value="'+deep+'"]').one(function(elem){elem.checked = true});
             Dom(target).addClass('active_deep');
 
             if (deep > 1)
@@ -49,21 +55,6 @@ if(App.namespace){App.namespace('Action.Editor', function(App) {
             else
                 App.Action.Relations.close();
         });
-
-
-
-        //console.log('request success categories:', data['categories']);
-        //console.log('request success categories:', data['categories']);
-
-/*
- <input hidden="hidden" type="radio" name="deep" value="3" checked>
-Linker.click('relation-remove', function (event) {
-            console.log(this, event);
-        });
-
-        Linker.click('relation-add', function (event) {
-            console.log(this, event);
-        });*/
     };
 
     //Object { link: "", tags: "", keyword: "", description: "", deep: "3", title: "", content: "" }
@@ -71,7 +62,7 @@ Linker.click('relation-remove', function (event) {
 
         var sendData = {item:null,relation:[]},
             errors = '',
-            require = ['link', 'deep', 'title', 'content'],
+            require = ['link', 'deep', 'title'],
             formError = _.node['form_error'],
             formData = Util.formData(_.node['form'], true);
 
@@ -109,7 +100,7 @@ Linker.click('relation-remove', function (event) {
                     formError.style.display = 'block';
                     App.inject(formError, response['error_info']);
                 }else{
-                    App.redirect('/editor/' + response['res_item']);
+                    App.redirect('/editor/' + response['res_item_link']);
                 }
 
             }, sendData );
@@ -120,8 +111,12 @@ Linker.click('relation-remove', function (event) {
         }
     };
 
-    _.saveRemove = function(){};
-    _.saveNew = function(){};
+    _.saveRemove = function(){
+        App.redirect('/delete/');
+    };
+    _.saveNew = function(){
+        App.redirect('/editor');
+    };
 
     /**
      * @namespace App.Action.Editor.attachButtonEvents
@@ -134,7 +129,32 @@ Linker.click('relation-remove', function (event) {
             });
         }
     };
+    _.resizeTextareaPosition = {};
+    _.resizeTextarea = function(){
+        var ta = App.query('#ef_content');
+        var menu = Dom.createElement(
+            'div',
+            {'style':'position:absolute;color:red;top:5px;right:15px;cursor:pointer;'},
+            '<i class="icon-resize-full-alt"></i>'
+        );
+        _.node['form'].appendChild(menu);
+        _.resizeTextareaPosition = Util.getPosition(ta);
 
+        ta.style.position = 'absolute';
+        ta.style.width = '100%';
+        ta.style.height = '100%';
+        ta.style.left = '0';
+        ta.style.top = '0';
+
+        menu.addEventListener('click',function(){
+            ta.style.width = _.resizeTextareaPosition.width+'px';
+            ta.style.height = _.resizeTextareaPosition.height+'px';
+            ta.style.position = 'auto';
+            ta.style.left = 'auto';
+            ta.style.top = 'auto';
+            _.node['form'].removeChild(menu);
+        });
+    };
     _.deepSwitcher = function(){
 
     };

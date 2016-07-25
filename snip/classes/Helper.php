@@ -48,5 +48,11 @@ class Helper
         return isset($_SESSION[$name]) ? $_SESSION[$name] : null;
     }
 
+    static public function wordsLimit($words, $limit = 5, $endString = '')
+    {
+        $words = explode(" ", $words);
+        return implode(" ", array_splice($words, 0, $limit)) . $endString;
+    }
+
 
 }

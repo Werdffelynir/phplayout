@@ -2,27 +2,39 @@
 /**
  * @type SLayout $this
  * @var $items
+ * @var $item
  */
 
 
-//var_dump($this);
-
+$is_admin = $this->isAdmin;
+$actions = $this->currentAction;
 
 ?>
 
-<div class="itemlist">
 
-    <?php foreach($items as $item): ?>
+    <div class="item">
+        <?= $item['content']?>
+    </div>
+
+    <div class="itemlist">
+
+        <?php foreach($items as $item):
+                $item_link = $actions[0] . '/' . $item['parent_link'] . '/' . $item['link'];
+            ?>
 
             <div class="tbl itempreview">
-                <div class="tbl_cell itempreview_title"><a href="/i/<?php echo $item['link'] ?>"><?php echo $item['title'] ?></a></div>
+                <div class="tbl_cell itempreview_title"><a href="/q/<?php echo $item_link ?>"><?php echo $item['title'] ?></a></div>
                 <div class="tbl_cell text_right width_10 itempreview_date"><?php echo date("d.m.Y", strtotime($item['created'])) ?></div>
                 <div class="tbl_cell text_center width_4 itempreview_vote"><?php echo !empty($item['vote'])?$item['vote']:' + ' ?></div>
             </div>
 
-    <?php endforeach; ?>
+            <div class="itempreview_desc">
+                <?= Helper::wordsLimit(strip_tags($item['link']), 25, '...')?>
+            </div>
 
-</div>
+        <?php endforeach; ?>
+
+    </div>
 
 
 

@@ -1,5 +1,6 @@
 <?php
 
+
 /**
  * Created by PhpStorm.
  * User: werd
@@ -9,6 +10,7 @@
 class Main
 {
 
+    public $isAdmin = true;
     /**
      * @var array|null
      */
@@ -49,9 +51,11 @@ class Main
         $this->Router = $SRouter;
         $this->Layout = $SLayout;
         $this->db = $SPDO;
-
         $this->modelItem = new Item($this->db);
         $this->modelRelation = new Relation($this->db);
+
+        $this->Layout->isAdmin = $this->isAdmin;
+        $this->Layout->Controller = $this;
 
         $this->commonLayoutVariables();
     }
@@ -72,7 +76,6 @@ class Main
     public function commonLayoutVariables()
     {
         // bases layout variables
-        $this->Layout->Controller = $this;
         $this->Layout->value('url', $this->Router->getUrl());
         $this->Layout->value('urlFull', $this->Router->getFullUrl());
     }
@@ -84,8 +87,7 @@ class Main
         $categories = $this->modelItem->getCategories();
 
         $this->Layout
-            ->setPosition('navigation', 'navigation', ['categories' => $categories])
-            ->setPosition('header', 'header', []);
+            ->setPosition('navigation', 'navigation', ['categories' => $categories]);
     }
 
     public function actionIndex()
@@ -97,71 +99,75 @@ class Main
             ->outTemplate();
     }
 
-    public function actionCategory($cat, $subcat, $item)
+    public function actionCategory($catLink, $subcatLink, $itemLink)
     {
+        $item = [];
         $items = [];
         $itemsMenu = [];
-        $this->Layout->value('currentActionCat', $cat);
-        $this->Layout->value('currentActionSubcat', $subcat);
-        $this->Layout->value('currentActionItem', $item);
+        $contentPart = 'list';
+        $this->Layout->currentAction = [$catLink, $subcatLink, $itemLink];
+        $this->Layout->value('currentActionCat', $catLink);
+        $this->Layout->value('currentActionSubcat', $subcatLink);
+        $this->Layout->value('currentActionItem', $itemLink);
 
         $this->addFrontend([
             'url' => $this->Router->getUrl(),
             'urlFull' => $this->Router->getFullUrl(),
-            'queryCat' => $cat,
-            'querySubcat' => $subcat,
-            'queryItem' => $item,
+            'queryCat' => $catLink,
+            'querySubcat' => $subcatLink,
+            'queryItem' => $itemLink,
         ]);
-        if (!empty($item)) {
 
 
+        if (!empty($itemLink)) {
+            $contentPart = 'item';
+            $item = $this->modelItem->getItem($itemLink);
+            $itemsMenu = $this->modelItem->getChildren($catLink, 1);
         }
-        else if (!empty($subcat)) {
-            $items = $this->modelItem->getSubcategoriesItems($subcat);
-            $itemsMenu = $this->modelItem->getChildren($cat, 1);
+        else if (!empty($subcatLink)) {
+            $item = $this->modelItem->getItem($subcatLink);
+            $items = $this->modelItem->getSubcategoriesItems($subcatLink);
+            $itemsMenu = $this->modelItem->getChildren($catLink, 1);
         }
-        else {
-            $items = $this->modelItem->getCategoriesItems($cat);
-            $itemsMenu = $this->modelItem->getChildren($cat, 1);
+        else if (!empty($catLink)) {
+            $item = $this->modelItem->getItem($catLink);
+            $items = $this->modelItem->getCategoriesItems($catLink);
+            $itemsMenu = $this->modelItem->getChildren($catLink, 1);
         }
-
-
-
-
-        //var_dump($cat, $subcat, $item);
-        //Helper::session('current_category', $link);
-        //$subcatItems = $this->modelItem->getSubcategoriesItems($link);
-        //$catItems = $this->modelItem->getCategoriesItems($link);
 
         $this->sendFrontendData();
         $this->commonLayoutPositions();
         $this->Layout
-            ->setPosition('sidebar', 'sidebar', ['menu' => $this->Layout->render('menu_subcat', ['items' => $itemsMenu])])
-            ->setPosition('content', 'content.category', ['items' => $items])
+            ->setPosition('header', 'header', [])
+            ->setPosition('sidebar', 'sidebar', [
+                'menu' => $this->Layout->render('menu_subcat', [
+                    'items' => $itemsMenu,
+                ])
+            ])
+            ->setPosition('content', 'content.'.$contentPart, [
+                'item' => $item,
+                'items' => $items
+            ])
             ->outTemplate();
     }
 
-    /*
-    public function actionSubcategory($link)
+
+    public function actionEditor($itemLink)
     {
-        //Helper::session('current_subcategory', $link);
-        $subcat = $this->modelItem->getChildren($link);
-        $items = $this->modelItem->getChildren($link);
+        $item = array_flip($this->modelItem->fields);
+        array_walk($item,function(&$itm){$itm = '';});
 
-        $this->commonLayoutPositions();
-        $this->Layout
-            ->setPosition('sidebar', 'sidebar', ['menu' => $this->Layout->render('menu_subcat', ['items' => $subcat])])
-            ->setPosition('content', 'content.category', ['items' => $items])
-            ->outTemplate();
-    }*/
+        if($itemLink) {
+            $this->addFrontend('editMode','update');
+            $item = $this->modelItem->getItem($itemLink);
+        } else
+            $this->addFrontend('editMode','insert');
 
-
-    public function actionEditor()
-    {
+        $this->sendFrontendData();
         $this->commonLayoutPositions();
         $this->Layout
             ->setPosition('sidebar', 'sidebar')
-            ->setPosition('content', 'content.editor')
+            ->setPosition('content', 'content.editor', ['item'=>$item])
             ->outTemplate();
     }
 
@@ -237,6 +243,7 @@ class Main
             'res_relations' => [],
         ];
 
+
         try{
 
             $item = json_decode($data['item'], true) ;
@@ -253,9 +260,9 @@ class Main
             $resp['operation_error'] = 'Parse data JSON catch exception: ' . $e->getMessage();
         }
 
+
         if($item) {
 
-            $itemData['deep'] = trim($item['deep']);
             $itemData['link'] = trim($item['link']);
             $itemData['title'] = trim($item['title']);
             $itemData['content'] = trim($item['content']);
@@ -265,25 +272,35 @@ class Main
             $itemData['description'] = trim($item['description']);
             $itemData['tags'] = trim($item['tags']);
 
-            if (empty($data['id'])) {
+            if (empty($item['id'])) {
 
                 $resp['mode'] = 'insert';
+                $itemData['deep'] = trim($item['deep']);
                 $resp['res_item'] = $current_id = $this->db->insert('item', $itemData);
+                $resp['res_item_link'] =  $itemData['link'];
 
                 if(!$resp['res_item']) {
                     $resp['error'] = true;
                     $resp['error_info'] = $this->db->getError('error');
                 }
 
+
+
             } else {
+
                 $resp['mode'] = 'update';
-                $result = $this->db->update('item', $itemData, 'id = ?', (int) $data['id']);
+                $itemData['updated'] = date('Y-m-d H:i:s');
+                $result = $this->db->update('item', $itemData, 'id = ?', (int) $item['id']);
 
                 if(!$result) {
                     $resp['error'] = true;
                     $resp['error_info'] = $this->db->getError('error');
                 }
-                else $resp['res_item'] = $data['id'];
+                else {
+
+                    $resp['res_item'] = $item['id'];
+                    $resp['res_item_link'] = $this->modelItem->getItemID($item['id'])['link'];
+                }
             }
         }
 

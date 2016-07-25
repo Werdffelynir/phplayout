@@ -14,6 +14,7 @@ App.require('libs',
         App.path + 'public/js.libs/dom.js',
         App.path + 'public/js.libs/util.js',
         App.path + 'public/js.libs/piece.js',
+        App.path + 'public/js.libs/timer.js',
         App.path + 'public/js.libs/linker.js'
     ],
     initLibs, initError);
@@ -59,6 +60,5 @@ function initDependence(list){
     try{
         App.server = JSON.parse(Util.Cookie('app'));
     }catch(e){}
-console.log(App.server);
     App.Controller.Page.construct();
 }
