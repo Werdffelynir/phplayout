@@ -1,0 +1,182 @@
+*{margin: 0; padding: 0; -webkit-box-sizing: border-box; -moz-box-sizing: border-box; -ms-box-sizing: border-box; box-sizing: border-box;}
+.grid1,
+.grid2,
+.grid3,
+.grid4,
+.grid5,
+.grid6,
+.grid7,
+.grid8,
+.grid9,
+.grid10,
+.grid11{display:inline; float:left; margin:0 0 0 1.0416666666667%; list-style:none;}
+.first{margin-left:0; clear:left;}
+.grid1:first-child,
+.grid2:first-child,
+.grid3:first-child,
+.grid4:first-child,
+.grid5:first-child,
+.grid6:first-child,
+.grid7:first-child,
+.grid8:first-child,
+.grid9:first-child,
+.grid10:first-child,
+.grid11:first-child{margin-left:0;}
+.grid1{width:7.3784722222222%;}
+.grid2{width:15.798611111111%;}
+.grid3{width:24.21875%;}
+.grid4{width:32.638888888889%;}
+.grid5{width:41.059027777778%;}
+.grid6{width:49.479166666667%;}
+.grid7{width:57.899305555556%;}
+.grid8{width:66.319444444444%;}
+.grid9{width:74.739583333333%;}
+.grid10{width:83.159722222222%;}
+.grid11{width:91.579861111111%;}
+.full,
+.grid,
+.grid12{display:block; width:100%; clear:both;}
+.full>div:nth-child(1),
+.grid>div:nth-child(1),
+.grid12>div:nth-child(1){margin-left:0; clear:left;}
+.clear_line{clear: both; width: 100%; height: 1px; margin-top: -1px}
+.clear:before,
+.clear:after{content: " "; display: table}
+.clear:after {clear: both}
+.clear {*zoom: 1}
+.hide{visibility: hidden}
+.block{display: block}
+.inline{display: inline}
+.width100{width:100%}
+.width75{width:75%}
+.width50{width:50%}
+.width33{width:33%}
+.width25{width:25%}
+.width10{width:10%}
+.txt_left{text-align:left}
+.txt_right{text-align:right}
+.txt_center{text-align:center}
+.mrg_top{margin-top:0}
+.mrg_bottom{margin-bottom: 0}
+.mrg_left{margin-left: 0}
+.mrg_right{margin-right: 0}
+.mrg_center{margin: 0 auto}
+.flt_left{float: left}
+.flt_right{float: right}
+.tbl{display:table; width:100%}
+.tbl_cell{display:table-cell;vertical-align:middle}
+.tbl_row{display:table-row}
+.tbl_column{display:table-column}
+.tbl_capt{display:table-caption}
+.valign_baseline{vertical-align:baseline}
+.valign_bottom{vertical-align:bottom}
+.valign_middle{vertical-align:middle}
+.valign_top{vertical-align:top}
+
+*{}
+*:focus{outline:none}
+html,body{
+    background-color: #8f664d;
+    color: #f5af86;
+    font-family: "Ubuntu Condensed", "Ubuntu", "sans-serif";
+    font-size: 90%;
+}
+p{}
+h1{}
+h2{}
+h3{}
+p{}
+ul{}
+ul>li{}
+
+#page{
+    width: 80%;
+    min-width: 820px;
+    margin: 0 auto;
+    background-color: #654835;
+    border-left: 6px solid #876047;
+    border-right: 6px solid #876047;
+    border-bottom: 6px solid #876047;
+}
+#header{
+    padding: 10px;
+    border-bottom: 6px solid #876047;
+}
+#footer{
+    padding: 30px;
+    text-align: center;
+    border-top: 6px solid #876047;
+}
+.sidebar{
+    width: 360px;
+    padding: 50px 0px;
+}
+.content{
+    min-height: 800px;
+    padding: 5px;
+    border-left: 6px solid #876047;
+}
+.logo{
+    line-height: 60px;
+    font-size: 250%;
+}
+.label{
+    width: 50%;
+    text-align: right;
+    padding-right: 10px;
+}
+
+form[name=genform]>.tbl{
+    margin-bottom: 10px;
+}
+form[name=genform] input[type=text], form[name=genform] input[type=number]{
+    width: 70px;
+    padding: 5px 5px;
+    border: 2px solid #5d3f2e;
+    background-color: #463123;
+    color: #ebea7e;
+}
+form[name=genform] input[type=submit]{
+    width: 75%;
+    margin: 30px 0;
+    background-color: #463123;
+    border: 2px solid #876047;
+    color: #ebaf8a;
+    cursor: pointer;
+    line-height: 30px;
+}
+form[name=genform] input[type=submit]:hover{
+    background-color: #5d3f2e;
+    border: 2px solid #876047;
+    color: #ebea7e;
+}
+
+.code{
+    /*width: 620px;*/
+    margin: 10px 0;
+    padding: 10px;
+    display: block;
+    overflow-x: auto;
+    font-size: 10px;
+    /*line-height: 18px;*/
+}
+.content a{
+    color: #ebea7e;
+}
+.content a:hover{
+    color: #dfeb2c;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

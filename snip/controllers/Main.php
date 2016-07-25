@@ -123,6 +123,7 @@ class Main
             $contentPart = 'item';
             $item = $this->modelItem->getItem($itemLink);
             $itemsMenu = $this->modelItem->getChildren($catLink, 1);
+
         }
         else if (!empty($subcatLink)) {
             $item = $this->modelItem->getItem($subcatLink);

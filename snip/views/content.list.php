@@ -5,12 +5,11 @@
  * @var $item
  */
 
-
+$uri = '/q/' . $this->value('currentActionCat') . '/' . $this->value('currentActionSubcat') . '/';
 $is_admin = $this->isAdmin;
 $actions = $this->currentAction;
 
 ?>
-
 
     <div class="item">
         <?= $item['content']?>
@@ -36,9 +35,6 @@ $actions = $this->currentAction;
 
     </div>
 
-
-
-
 <?php
 /*
 array (size=3)
@@ -57,3 +53,16 @@ array (size=3)
   1 =>
 */
 ?>
+
+
+
+
+
+
+
+
+
+
+
+
+

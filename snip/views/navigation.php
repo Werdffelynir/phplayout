@@ -21,11 +21,7 @@ $url = '/q/';
         </ul>
     </div>
     <div class="tbl_cell nav_right text_right">
-        <a href="<?=$url?>editor" class="btn_inline_orange">JS Run</a>
-        <a href="<?=$url?>editor" class="btn_inline_orange">GridCSS</a>
+        <a href="/runjs" class="btn_inline_orange">RunJS</a>
+        <a href="/cssgrid" class="btn_inline_orange">GridCSS</a>
     </div>
 </div>
-
-
-
-

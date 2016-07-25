@@ -2,8 +2,9 @@
 html,body{
     background-color: #232323;
     color: #000;
-    font-size: 90%;
-    font-family: 'Open Sans', sans-serif;
+    font-size: 12px;
+    /*font-family: 'Open Sans', sans-serif;*/
+    font-family: 'Open Sans', Frutiger, Calibri, 'Myriad Pro', Myriad, sans-serif;
 }
 ul, li, ol{margin: 0; padding: 0;}
 li{list-style: none;}
@@ -558,7 +559,7 @@ form[name=search] i {
     margin: 0;
 }
 .item{
-    width: 101.5%;
+    /*width: 101.5%;*/
 }
 .item_info{
     padding: 5px 0 10px 5px;
@@ -581,6 +582,7 @@ form[name=search] i {
 #page{
     overflow: hidden;
 }
+
 .item_content>:not(pre) {
     padding: 5px 10px;
 }
@@ -593,6 +595,11 @@ form[name=search] i {
 }
 .hljs {
 }
+
+.item_content h1{padding: 15px 0 8px 10px !important;}
+.item_content h2{padding: 12px 0 6px 10px !important;}
+.item_content h3{padding: 10px 0 6px 10px !important;}
+.item_content h4, .item_content h5{padding: 8px 0 4px 10px !important;}
 
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
