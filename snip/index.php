@@ -4,6 +4,7 @@ require_once('../src/SLayout.php');
 require_once('classes/Helper.php');
 require_once('classes/SRouter.php');
 require_once('classes/SPDO.php');
+require_once('classes/Parsedown.php');
 require_once('models/Item.php');
 require_once('models/Relation.php');
 require_once('controllers/Main.php');

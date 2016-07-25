@@ -54,13 +54,11 @@ class SLayout
     public function render($view, array $data = [], callable $callback = null)
     {
         if($view_path = $this->realFile($view)) {
-
             if($callback) {
                 $callback_result = $callback($data);
                 if(is_array($callback_result))
                     $data = $callback_result;
             }
-
             ob_start();
             extract((array) $data);
             require($view_path);
@@ -69,11 +67,44 @@ class SLayout
             return false;
     }
 
+
+    /**
+     * @param $name
+     * @param array $args
+     * @return mixed
+     */
     public function __call($name, array $args)
     {
         var_dump($name);
         if($name === 'value' || $name === 'val' )
             return call_user_func_array( [$this, 'value'], $args );
+    }
+
+
+    private $setStack = [];
+
+
+    /**
+     * Все прикрепляемые свойства к екзкмпляру через сеттер ложатся в отдельный стак
+     * @param $name
+     * @param $value
+     */
+    public function __set($name, $value)
+    {
+        $this->setStack[$name] = $value;
+    }
+
+
+    /**
+     * Все прикрепляемые свойства к екзкмпляру ложатся в стак, и получаются через геттер
+     * @param $name
+     * @return mixed|null
+     */
+    public function __get($name)
+    {
+        if(isset($this->setStack[$name]))
+            return $this->setStack[$name];
+        return null;
     }
 
     /**

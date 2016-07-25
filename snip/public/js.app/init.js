@@ -3,7 +3,8 @@ window.App = new NamespaceApplication({
     path: '/',
     debug: true,
     token: 'secret_token_key',
-    constructsType: false
+    constructsType: false,
+    server: {}
 });
 
 
@@ -13,6 +14,7 @@ App.require('libs',
         App.path + 'public/js.libs/dom.js',
         App.path + 'public/js.libs/util.js',
         App.path + 'public/js.libs/piece.js',
+        App.path + 'public/js.libs/timer.js',
         App.path + 'public/js.libs/linker.js'
     ],
     initLibs, initError);
@@ -55,5 +57,8 @@ function initLibs(list){
 function initDependence(list){
     console.log('Application start!');
 
+    try{
+        App.server = JSON.parse(Util.Cookie('app'));
+    }catch(e){}
     App.Controller.Page.construct();
 }

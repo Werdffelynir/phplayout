@@ -18,6 +18,12 @@ class Helper
         return false;
     }
 
+    /**
+     * ( string $name [, string $value [, int $expire = 0 [, string $path [, string $domain [, bool $secure = false [, bool $httponly = false ]]]]]] )
+     * @param $name
+     * @param null $value
+     * @return mixed|null
+     */
     static public function cookies($name, $value = null)
     {
         $argsNum = func_num_args();
@@ -40,6 +46,12 @@ class Helper
 
         # session var get
         return isset($_SESSION[$name]) ? $_SESSION[$name] : null;
+    }
+
+    static public function wordsLimit($words, $limit = 5, $endString = '')
+    {
+        $words = explode(" ", $words);
+        return implode(" ", array_splice($words, 0, $limit)) . $endString;
     }
 
 

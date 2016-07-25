@@ -21,6 +21,13 @@ $url = $this->value('url');
     <link rel="stylesheet" href="<?=$url?>public/fontello/css/fontello.css">
     <link rel="stylesheet" href="<?=$url?>public/fontello/css/animation.css">
 
+    <!--   solarized_dark.css color-brewer.css idea.css   -->
+    <link rel="stylesheet" href="<?=$url?>public/highlight/styles/idea.css">
+    <script src="<?=$url?>public/highlight/highlight.pack.js"></script>
+
+
+    <script></script>
+
     <script type="application/javascript" src="<?=$url?>public/js.libs/ns.application.js"></script>
     <script type="application/javascript" src="<?=$url?>public/js.app/init.js"></script>
 
@@ -38,19 +45,23 @@ $url = $this->value('url');
     <div id="navigation">
         <?php SLayout::outPosition('navigation')?>
     </div>
-    <div id="header">
+    <div id="header" class="color_bg_header">
         <?php SLayout::outPosition('header')?>
     </div>
-    <div id="container" class="tbl">
-        <div id="sidebar" class="tbl_cell valign_top width_20">
+    <div id="container" class="grid clear">
+        <div id="sidebar" class="grid3 first">
             <?php SLayout::outPosition('sidebar')?>
         </div>
-        <div id="content" class="tbl_cell valign_top">
+        <div id="content" class="grid9">
             <?php SLayout::outPosition('content')?>
         </div>
     </div>
-    <div id="footer">footer</div>
+    <div id="footer">
+        <div class="copy_org">open Web Code</div>
+    </div>
+<!--    <div class="logo"><i>psycho</i><i>Sun</i><i>Light</i><i>System</i></div>-->
 </div>
+
 
 </body>
 </html>

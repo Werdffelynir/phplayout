@@ -148,7 +148,11 @@ if(App.namespace){App.namespace('Action.Relations', function(App) {
             if(link == 'cancel') _.close();
             if(link == 'confirm') {
 
+
                 var relfirst = App.Catch.get('relation_first')['data'];
+
+                //console.log(relfirst);
+
 
                 if(_.deep == 2 && _.countItems() < 1) {
                     _.node['rel_items'].appendChild(_.createItemElement(relfirst.title, relfirst.id));

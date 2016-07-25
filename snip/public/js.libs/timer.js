@@ -79,11 +79,25 @@
 
         };
 
+    timer.timeout = function (callback, ms, thisInst) {
+        if(typeof callback === 'function' && !isNaN(ms) && ms > 0){
+            thisInst = typeof thisInst === 'object' ? thisInst : {};
+            return setTimeout(function(){callback.call(thisInst)}, ms);
+        }
+    };
+    timer.interval = function (callback, ms, thisInst) {
+        if(typeof callback === 'function' && !isNaN(ms) && ms > 0){
+            thisInst = typeof thisInst === 'object' ? thisInst : {};
+            return setInterval(function(){callback.call(thisInst)}, ms);
+        }
+    };
+    timer.timeoutStop = function (intervalId) {clearTimeout(intervalId)};
+    timer.intervalStop = function (intervalId) {clearInterval(intervalId)};
 
     timer.START = 'start';
     timer.PROGRESS = 'progress';
     timer.COMPLETE = 'complete';
-    
+
     window.Timer = timer;
     window.Timer.prototype = timerProto;
     window.Timer.prototype.constructor = timer;
