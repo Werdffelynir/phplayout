@@ -124,6 +124,32 @@ class Main
             $item = $this->modelItem->getItem($itemLink);
             $itemsMenu = $this->modelItem->getChildren($catLink, 1);
 
+            // ...
+            // ...
+
+            $sql = 'SELECT
+                      i.*,
+                      isc.id as sc_id,
+                      isc.title as sc_title,
+                      isc.link as sc_link,
+                      ic.id as c_id,
+                      ic.title as c_title,
+                      ic.link as c_link,
+                      rsc.id as relsc_id,
+                      rc.id as relc_id
+                    FROM item i
+                    LEFT JOIN relation rsc ON (rsc.child = i.id)
+                    LEFT JOIN relation rc ON (rc.child = rsc.parent)
+                    LEFT JOIN item isc ON (isc.id = rsc.parent)
+                    LEFT JOIN item ic ON (ic.id = rc.parent)
+                    WHERE i.link = ?';
+
+            $result = $this->db->executeOne($sql, 'timezonesph');
+            var_dump($result);
+
+            exit;
+            // ...
+
         }
         else if (!empty($subcatLink)) {
             $item = $this->modelItem->getItem($subcatLink);
