@@ -10,7 +10,10 @@
 class Main
 {
 
-    public $isAdmin = true;
+    public $isAdmin = null;
+
+    public $isAuth = null;
+
     /**
      * @var array|null
      */
@@ -54,9 +57,13 @@ class Main
         $this->modelItem = new Item($this->db);
         $this->modelRelation = new Relation($this->db);
 
+        if(Helper::session('auth') == 'admin'){
+            $this->isAdmin = true;
+            $this->isAuth = true;
+        }
+
         $this->Layout->isAdmin = $this->isAdmin;
         $this->Layout->Controller = $this;
-
         $this->commonLayoutVariables();
     }
 
@@ -127,7 +134,7 @@ class Main
             // ...
             // ...
 
-            $sql = 'SELECT
+/*            $sql = 'SELECT
                       i.*,
                       isc.id as sc_id,
                       isc.title as sc_title,
@@ -147,7 +154,7 @@ class Main
             $result = $this->db->executeOne($sql, 'timezonesph');
             var_dump($result);
 
-            exit;
+            exit;*/
             // ...
 
         }
@@ -204,15 +211,9 @@ class Main
         return 'secret_session_token_key';
     }
 
+
     private $frontendData = [];
-/*    public function addFrontend($key, $value = null, $onlyOne = false)
-    {
-        if(is_array($key) && $onlyOne === false)
-            foreach ($key as $k => $v)
-                $this->addFrontend($k, $v, true);
-        else
-            $this->frontendData[$key] = $value;
-    }*/
+
     public function addFrontend($key, $value = null)
     {
         if(is_array($key))
@@ -220,10 +221,42 @@ class Main
         else if(is_string($key))
             $this->frontendData[$key] = $value;
     }
+
     public function sendFrontendData()
     {
         Helper::cookies('app', json_encode($this->frontendData), 0, '/');
     }
+
+
+    /**
+     * Авторизация админа
+     * @param $action
+     */
+    public function actionAuth($action)
+    {
+        $username = Helper::post('username');
+        $password = Helper::post('password');
+
+        if($action === 'login') {
+
+            if($username == 'admin' && $password == 'admin') {
+                Helper::session('auth', 'admin');
+                header('Location: /');
+            }
+        }
+        else if($action === 'logout') {
+            Helper::session('auth', false);
+            header('Location: /');
+        }
+
+        $this->Layout
+            ->setPosition('content', 'content.login', [])
+            ->outTemplate();
+    }
+
+    public function login($username, $password){ }
+
+    public function logout() {}
 
     /*   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *
      *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *
@@ -368,142 +401,4 @@ class Main
         }
     }
 
-
-
-
-
-
-    /*
-     * args.key = key
-args.token = App.token
-        public function actionInsert()
-        {
-            $response = [
-                'data' => null,
-                'error' => null,
-                'result' => null,
-            ];
-            try{
-                $data['deep'] = trim($_POST['deep']);
-                $data['link'] = trim($_POST['link']);
-                $data['title'] = trim($_POST['title']);
-                $data['content'] = trim($_POST['content']);
-                $data['created'] = time();
-                $data['keyword'] = trim($_POST['keyword']);
-                $data['description'] = trim($_POST['description']);
-                $data['tags'] = trim($_POST['tags']);
-
-                $result = $this->db->insert('item', $data);
-
-                if($error = $this->db->getError()){
-                    $response['error'] = $error['error'];
-                    $response['error_sql'] = $error['sql'];
-                }else
-                    $response['result'] = $result;
-
-            }catch(Exception $e) {
-                $response['error'] = '"InsertItem" Error - try parse POST data ';
-            }
-
-            print_r(json_encode($response));
-            exit;
-        }
-
-        public function actionInsertRelation()
-        {
-            $response = [
-                'data' => null,
-                'error' => null,
-                'result' => null,
-            ];
-            try{
-                $data['parent'] = (int)trim($_POST['parent']);
-                $data['child'] = (int)trim($_POST['child']);
-
-                $result = $this->db->insert('relation', $data);
-
-                if($error = $this->db->getError()){
-                    $response['error'] = $error['error'];
-                    $response['error_sql'] = $error['sql'];
-                }else
-                    $response['result'] = $result;
-
-            }catch(Exception $e) {
-                $response['error'] = '"InsertRelation" Error - try parse POST data ';
-            }
-
-            print_r(json_encode($response));
-            exit;
-        }
-
-
-
-        public function actionUpdate()
-        {
-            echo 'Hello Update';
-
-            exit;
-        }
-
-        public function actionDelete()
-        {
-            echo 'Hello';
-
-            exit;
-        }
-
-        public function actionCategory()
-        {
-
-        }
-
-        public function actionItem()
-        {
-
-        }
-
-        public function actionAllSubcategories($parent)
-        {
-            $response = [
-                'result' => null,
-                'error' => null,
-            ];
-
-            $result = $this->actionGetAllByDeep((int) $parent);
-
-            if($result)
-                $response['result'] = $result;
-            else if($error = $this->db->getError()) {
-                $response['error'] = $error['error'];
-                $response['error_sql'] = $error['sql'];
-            }
-
-            print_r(json_encode($response));
-            exit;
-        }
-
-        public function actionAllCategories()
-        {
-            $response = [
-                'result' => null,
-                'error' => null,
-            ];
-
-            $result = $this->actionGetAllByDeep(1);
-
-            if($result)
-                $response['result'] = $result;
-            else if($error = $this->db->getError()) {
-                $response['error'] = $error['error'];
-                $response['error_sql'] = $error['sql'];
-            }
-
-            print_r(json_encode($response));
-            exit;
-        }
-
-        public function actionGetAllByDeep($deep)
-        {
-            return $this->db->select('*', 'item', 'deep = ?', [(int)$deep]);
-        }*/
 }

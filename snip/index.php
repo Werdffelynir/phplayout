@@ -31,6 +31,7 @@ $SRouter->get('/', [$Controller,'actionIndex']);
 $SRouter->get('/q/:p!/:p?/:p?', [$Controller,'actionCategory']);
 $SRouter->get('/editor/:p?', [$Controller,'actionEditor']);
 $SRouter->post('/api', [$Controller,'actionApi']);
+$SRouter->map('POST|GET', '/auth/:p?', [$Controller,'actionAuth']);
 
 if($errors = $SRouter->getRouterErrors()) {
     var_dump($errors);
