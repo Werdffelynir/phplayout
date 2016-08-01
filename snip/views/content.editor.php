@@ -15,7 +15,6 @@ $itemValue = function ($name) use ($item) {
 };
 
 
-
 ?>
 
 
@@ -67,7 +66,36 @@ $itemValue = function ($name) use ($item) {
 
                 <div id="relation_items"></div>
 
-                <?php echo $select_relation; ?>
+<?php
+
+/*$relHtml = '';
+
+if($item['item']) {
+    $titleCat = $item['parent_parent_title'];
+    $titleSubcat = $item['parent_title'];
+    $idSubcat = $item['parent_id'];
+    $relHtml = '<div class="relation_item tbl" data-id="'.$idSubcat.'"><div class="tbl_cell"><i class="icon-cancel"></i></div><div class="tbl_cell">'.$titleCat.' &gt; '.$titleSubcat.'</div></div>';
+}
+*/
+
+
+/*
+[parent_id] => 112
+[parent_title] => Общее
+[parent_link] => commonlinux
+[parent_parent_id] => 9
+[parent_parent_title] => Linux
+[parent_parent_link] => linux
+[rel_parent_id] => 112
+[rel_parent_parent_id] => 101
+[type] => item ) */
+
+var_dump($item);
+var_dump($relations);
+
+echo $select_relation;
+
+?>
 
                 <div id="form_error"></div>
 

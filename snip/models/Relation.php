@@ -20,6 +20,27 @@ class Relation
     }
 
 
+    public function getRelation($itemLink)
+    {
+        $sql = "SELECT 
+                r.* , 
+                ip.id AS itemp_id,
+                ip.link AS itemp_link,
+                ip.title AS itemp_title, 
+                ipp.id AS itempp_id,
+                ipp.link AS itempp_link,
+                ipp.title AS itempp_title
+                FROM relation r
+                LEFT JOIN item i ON (i.id = r.child) 
+                LEFT JOIN item ip ON (ip.id = r.parent) 
+                LEFT JOIN relation rp ON (rp.child = r.parent) 
+                LEFT JOIN item ipp ON (ipp.id = rp.parent) 
+                WHERE i.link = ?";
+
+        return $this->db->executeAll($sql, $itemLink);
+    }
+
+
     /**
      * @param $parent
      * @param $child

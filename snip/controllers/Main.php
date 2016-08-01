@@ -103,6 +103,7 @@ class Main
     {
         $item = [];
         $items = [];
+        $relations = [];
         $itemsMenu = [];
         $contentPart = 'list';
         $this->Layout->currentAction = [$catLink, $subcatLink, $itemLink];
@@ -123,31 +124,14 @@ class Main
             $contentPart = 'item';
             $item = $this->modelItem->getItem($itemLink);
             $itemsMenu = $this->modelItem->getChildren($catLink, 1);
-
+            $relations = $this->modelRelation->getRelation($itemLink);
             // ...
             // ...
 
-            $sql = 'SELECT
-                      i.*,
-                      isc.id as sc_id,
-                      isc.title as sc_title,
-                      isc.link as sc_link,
-                      ic.id as c_id,
-                      ic.title as c_title,
-                      ic.link as c_link,
-                      rsc.id as relsc_id,
-                      rc.id as relc_id
-                    FROM item i
-                    LEFT JOIN relation rsc ON (rsc.child = i.id)
-                    LEFT JOIN relation rc ON (rc.child = rsc.parent)
-                    LEFT JOIN item isc ON (isc.id = rsc.parent)
-                    LEFT JOIN item ic ON (ic.id = rc.parent)
-                    WHERE i.link = ?';
+            //$result = $this->modelItem->getItemFormatted($itemLink);
+            //var_dump($result);
 
-            $result = $this->db->executeOne($sql, 'timezonesph');
-            var_dump($result);
-
-            exit;
+            //exit;
             // ...
 
         }
@@ -155,11 +139,13 @@ class Main
             $item = $this->modelItem->getItem($subcatLink);
             $items = $this->modelItem->getSubcategoriesItems($subcatLink);
             $itemsMenu = $this->modelItem->getChildren($catLink, 1);
+            $relations = $this->modelRelation->getRelation($subcatLink);
         }
         else if (!empty($catLink)) {
             $item = $this->modelItem->getItem($catLink);
             $items = $this->modelItem->getCategoriesItems($catLink);
             $itemsMenu = $this->modelItem->getChildren($catLink, 1);
+            $relations = $this->modelRelation->getRelation($catLink);
         }
 
         $this->sendFrontendData();
@@ -173,7 +159,8 @@ class Main
             ])
             ->setPosition('content', 'content.'.$contentPart, [
                 'item' => $item,
-                'items' => $items
+                'items' => $items,
+                'relations' => $relations,
             ])
             ->outTemplate();
     }
@@ -194,7 +181,10 @@ class Main
         $this->commonLayoutPositions();
         $this->Layout
             ->setPosition('sidebar', 'sidebar')
-            ->setPosition('content', 'content.editor', ['item'=>$item])
+            ->setPosition('content', 'content.editor', [
+                'item'=>$item,
+                'relations'=> $this->modelRelation->getRelation($itemLink),
+            ])
             ->outTemplate();
     }
 
