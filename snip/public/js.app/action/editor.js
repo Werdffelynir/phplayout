@@ -112,8 +112,25 @@ if(App.namespace){App.namespace('Action.Editor', function(App) {
     };
 
     _.saveRemove = function(){
-        App.redirect('/delete/');
+        var sendData = {delete_id:null, item:null, relations:[] },
+            formError = _.node['form_error'];
+
+
+        formError.style.display = 'none';
+        App.Api.request('save', function (response) {
+
+            console.log('### save:', response);
+
+            if(response['error']) {
+                formError.style.display = 'block';
+                App.inject(formError, response['error_info']);
+            }else{
+                //App.redirect('/editor');
+            }
+
+        }, sendData );
     };
+
     _.saveNew = function(){
         App.redirect('/editor');
     };

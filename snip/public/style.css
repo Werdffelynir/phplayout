@@ -456,8 +456,8 @@ form[name=search] i {
     width: auto;
 /*    background-color: #ddd;
     border-radius: 5px;
-    padding: 0 5px;*/
-    font-weight: 600;
+    padding: 0 5px;
+    font-weight: 600;*/
     font-size: 12px;
 }
 
@@ -603,8 +603,24 @@ form[name=search] i {
 
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
+#form_login_block{
+    width: 20%;
+    margin: 10% auto;
+}
 
-
+/*[type=text], #form_login_block input[type=password]*/
+#form_login_block input{
+    width: 100%;
+    display: block;
+    border: 1px solid #CCC;
+    padding: 4px 5px;
+    margin-bottom: 15px;
+}
+#form_login_header{
+    background-color: #453C4D;
+    color: #FFF;
+    padding-left: 10px;
+}
 
 
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */

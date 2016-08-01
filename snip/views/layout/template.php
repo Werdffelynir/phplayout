@@ -48,14 +48,28 @@ $url = $this->value('url');
     <div id="header" class="color_bg_header">
         <?php SLayout::outPosition('header')?>
     </div>
-    <div id="container" class="grid clear">
-        <div id="sidebar" class="grid3 first">
-            <?php SLayout::outPosition('sidebar')?>
+
+    <?php if(empty(SLayout::outPosition('sidebar', true))): ?>
+
+        <div id="container">
+            <div id="content">
+                <?php SLayout::outPosition('content')?>
+            </div>
         </div>
-        <div id="content" class="grid9">
-            <?php SLayout::outPosition('content')?>
+
+    <?php else: ?>
+
+        <div id="container" class="grid clear">
+            <div id="sidebar" class="grid3 first">
+                <?php SLayout::outPosition('sidebar')?>
+            </div>
+            <div id="content" class="grid9">
+                <?php SLayout::outPosition('content')?>
+            </div>
         </div>
-    </div>
+
+    <?php endif; ?>
+
     <div id="footer">
         <div class="copy_org">open Web Code</div>
     </div>

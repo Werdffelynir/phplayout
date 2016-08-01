@@ -4,7 +4,7 @@
  * @type string $url
  * @type array $categories
  * @type array $item;
-
+ * @type array $relations;
  */
 
 
@@ -64,35 +64,24 @@ $itemValue = function ($name) use ($item) {
 
                 </div>
 
-                <div id="relation_items"></div>
+<?php
+$rel_items = '';
+if(!empty($relations)) {
+    foreach ($relations as $r) {
+        $rid = $r['id'];
+        if($r['type'] == 'item')
+            $rel_title = $r['itempp_title'] .' &gt; '. $r['itemp_title'];
+        else
+            $rel_title =  $r['itemp_title'];
+        $rel_items .= '<div class="relation_item tbl" data-id="'.$rid.'"><div class="tbl_cell"><i class="icon-cancel"></i></div><div class="tbl_cell">'.$rel_title.'</div></div>';
+    }
+}
+?>
+
+                <div id="relation_items"><?php echo $rel_items?></div>
+
 
 <?php
-
-/*$relHtml = '';
-
-if($item['item']) {
-    $titleCat = $item['parent_parent_title'];
-    $titleSubcat = $item['parent_title'];
-    $idSubcat = $item['parent_id'];
-    $relHtml = '<div class="relation_item tbl" data-id="'.$idSubcat.'"><div class="tbl_cell"><i class="icon-cancel"></i></div><div class="tbl_cell">'.$titleCat.' &gt; '.$titleSubcat.'</div></div>';
-}
-*/
-
-
-/*
-[parent_id] => 112
-[parent_title] => Общее
-[parent_link] => commonlinux
-[parent_parent_id] => 9
-[parent_parent_title] => Linux
-[parent_parent_link] => linux
-[rel_parent_id] => 112
-[rel_parent_parent_id] => 101
-[type] => item ) */
-
-var_dump($item);
-var_dump($relations);
-
 echo $select_relation;
 
 ?>
